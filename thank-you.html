@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - The Protein Princess</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .thank-you-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #8e2de2, #4a00e0);
+            color: white;
+        }
+        
+        .thank-you-container {
+            max-width: 800px;
+            padding: 3rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-dark);
+            color: var(--text-color);
+            animation: fadeIn 1s ease, slideUp 0.8s ease;
+        }
+        
+        .thank-you-icon {
+            font-size: 5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .thank-you-container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .thank-you-container p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .return-home {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="thank-you-page">
+        <div class="thank-you-container">
+            <div class="thank-you-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1>Thank You!</h1>
+            <p>Your form has been successfully submitted. I'm excited to start this fitness journey with you!</p>
+            <p>I'll be contacting you within 24-48 hours to discuss your fitness goals and how I can help you achieve them.</p>
+            <div class="return-home">
+                <a href="index.html" class="btn btn-primary">Return to Homepage</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

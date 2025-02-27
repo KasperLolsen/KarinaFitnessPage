@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Protein Princess - Personal Training</title>
+    <meta name="description" content="Transform your body and life with personalized fitness training by The Protein Princess. Expert nutrition coaching and workout plans for all fitness levels.">
+    <meta name="keywords" content="personal trainer, fitness coach, nutrition coach, workout plans, body transformation">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Import Sequel font -->
+    <link rel="stylesheet" href="https://use.typekit.net/msa4tge.css"> <!-- Updated to Sequel font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Preload critical hero image -->
+    <link rel="preload" href="images/IMG_6917.jpeg" as="image">
+    <!-- Add critical CSS inline -->
+    <style>
+        /* Critical CSS for above-the-fold content */
+        .loader, header, .hero {
+            visibility: visible;
+        }
+        /* Font display swap to avoid invisible text */
+        @font-face {
+            font-family: 'sequel-sans';
+            font-display: swap;
+        }
+    </style>
+    <!-- Add structured data for better SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "The Protein Princess",
+        "image": "images/IMG_3674.png",
+        "description": "Personal fitness training and nutrition coaching",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Downtown Fitness Studio",
+            "addressLocality": "City"
+        },
+        "telephone": "(123) 456-7890",
+        "email": "info@proteinprincess.com",
+        "openingHours": "Mo-Fr 07:00-20:00",
+        "priceRange": "$$"
+    }
+    </script>
+</head>
+<body>
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <!-- Preloader -->
+    <div class="loader" id="preloader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Custom cursor for desktop devices -->
+    <div class="custom-cursor" aria-hidden="true"></div>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="images/IMG_3674.png" alt="The Protein Princess" class="logo-img">
+            </div>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#transformations">Transformations</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#contact" class="btn btn-primary">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home" class="hero parallax-bg texture-bg">
+        <div class="container">
+            <div class="hero-content custom-cursor-area">
+                <h1 class="reveal-text">Power, Protein and Princess Energy</h1>
+                <p class="animate-fade-in">Ready to become the Protein Princess you were born to be?</p>
+                <div class="button-container">
+                    <a href="#contact" class="btn btn-primary animate-fade-in">Get Started Today</a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="metrics texture-bg">
+        <div class="container">
+            <div class="metrics-grid">
+                <div class="metric-item" data-aos="fade-up">
+                    <div class="metric-number" data-count="5">0</div>
+                    <div class="metric-label">Years Experience</div>
+                </div>
+                <div class="metric-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="metric-number" data-count="200">0</div>
+                    <div class="metric-label">Clients Transformed</div>
+                </div>
+                <div class="metric-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="metric-number" data-count="15">0</div>
+                    <div class="metric-label">Fitness Programs</div>
+                </div>
+                <div class="metric-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="metric-number" data-count="98">0</div>
+                    <div class="metric-label">Success Rate %</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>About Karina</h2>
+                <p>Certified Personal Trainer and Nutrition Specialist</p>
+            </div>
+            <div class="about-content">
+                <div class="about-image animate-slide-left">
+                    <div class="image-placeholder">
+                        <!-- Add lazy loading for below-fold image -->
+                        <img src="images/IMG_3526.jpeg" alt="Karina - Fitness Trainer" class="about-img" loading="lazy">
+                    </div>
+                </div>
+                <div class="about-text animate-slide-right">
+                    <h3>Passionate About Helping You Reach Your Goals</h3>
+                    <p>With over 5 years of experience in personal training and nutrition coaching, I'm dedicated to helping clients of all fitness levels achieve their goals and transform their lives.</p>
+                    <p>My approach focuses on sustainable fitness habits, personalized workout plans, and nutrition guidance that fits your lifestyle.</p>
+                    <ul class="credentials">
+                        <li>Certified Personal Trainer (CPT)</li>
+                        <li>Nutrition and Wellness Specialist</li>
+                        <li>Functional Training Expert</li>
+                        <li>Weight Management Consultant</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Services</h2>
+                <p>Tailored fitness solutions to meet your needs</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card" style="background-image: url('images/IMG_6911.jpeg'); background-position: center 30%;">
+                    <div class="service-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <div class="content">
+                        <h3>Online Coaching</h3>
+                        <p>Remote training and support for clients who prefer to work out on their own schedule.</p>
+                    </div>
+                </div>
+                <div class="service-card" style="background-image: url('images/IMG_6912.jpeg');">
+                    <div class="service-icon">
+                        <i class="fas fa-apple-alt"></i>
+                    </div>
+                    <div class="content">
+                        <h3>Nutrition Planning</h3>
+                        <p>Custom meal plans and nutritional guidance to support your fitness journey.</p>
+                    </div>
+                </div>
+                <div class="service-card" style="background-image: url('images/IMG_6915.jpeg');">
+                    <div class="service-icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="content">
+                        <h3>Buy Program</h3>
+                        <p>Pre-made workout programs at an affordable price with less commitment than coaching options.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>Success Stories</h2>
+                <p>Hear from clients who transformed their lives</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Working with Karina changed my life! I've lost 30 pounds and gained so much confidence. Her personalized approach made all the difference."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                            <!-- Add lazy loading -->
+                            <img src="images/IMG_2819.jpeg" alt="Sarah J." class="client-img" loading="lazy">
+                        </div>
+                        <div class="author-info">
+                            <h4>Sarah J.</h4>
+                            <p>Lost 30 lbs in 6 months</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"After struggling with various workout programs, Karina's nutrition guidance and training plan finally helped me build the muscle definition I wanted."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                            <!-- Add lazy loading -->
+                            <img src="images/IMG_2834.jpeg" alt="Michael T." class="client-img" loading="lazy">
+                        </div>
+                        <div class="author-info">
+                            <h4>Michael T.</h4>
+                            <p>Gained muscle & improved strength</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"As a busy mom, I never thought I'd find time for fitness. Karina created a program that fits my schedule and has helped me reclaim my energy and health!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                            <!-- Add lazy loading -->
+                            <img src="images/1B7B6506-ECA3-40D9-979B-4EE25AFB72F0.jpeg" alt="Jennifer L." class="client-img" loading="lazy">
+                        </div>
+                        <div class="author-info">
+                            <h4>Jennifer L.</h4>
+                            <p>Improved energy & fitness level</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Everything you need to know to get started</p>
+            </div>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">How often should I work out to see results?</div>
+                    <div class="faq-answer">
+                        <p>For optimal results, I recommend 3-4 training sessions per week, with adequate rest days in between to allow your body to recover. However, this can vary based on your current fitness level, goals, and lifestyle. During our consultation, we'll establish a personalized schedule that works best for you.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Do I need any special equipment for online coaching?</div>
+                    <div class="faq-answer">
+                        <p>Not necessarily! I design programs that can be adapted to your available resources. While some basic equipment like dumbbells or resistance bands can be helpful, I can create effective workouts using just your body weight. If you have access to a gym, that's great, but it's definitely not required.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What's included in the nutrition planning service?</div>
+                    <div class="faq-answer">
+                        <p>My nutrition planning service includes a comprehensive assessment of your current eating habits, dietary preferences, and nutritional needs. You'll receive a customized meal plan with recipes, grocery lists, and portion guidance. I also provide education on macronutrients, meal timing, and nutrition strategies specific to your goals. Regular check-ins and adjustments are included to ensure your plan evolves with your progress.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">How long before I see results?</div>
+                    <div class="faq-answer">
+                        <p>Most clients begin to notice changes within 2-4 weeks of consistent training and nutrition. These initial changes might include increased energy, better sleep, and improvements in strength. Visible physical changes typically become more apparent after 6-8 weeks. Remember that sustainable results take time—this isn't about quick fixes, but rather establishing healthy habits that lead to long-term transformation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact texture-bg">
+        <div class="container">
+            <div class="section-header">
+                <h2>Ready to <span class="highlight-text">Transform</span>?</h2>
+                <p>Fill out the form below to get started on your fitness journey</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-form">
+                    <form id="interest-form" action="https://formspree.io/f/movjogqa" method="POST">
+                        <input type="hidden" name="_subject" value="New Fitness Inquiry">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder="Your full name" required aria-required="true">
+                            <label for="name">Full Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="Your email address" required aria-required="true">
+                            <label for="email">Email Address</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="phone" name="phone" placeholder="Your phone number (optional)" aria-describedby="phone-help">
+                            <label for="phone">Phone Number</label>
+                            <span id="phone-help" class="helper-text">Optional</span>
+                        </div>
+                        <div class="form-group">
+                            <select id="goals" name="goals" required aria-required="true">
+                                <option value="" selected disabled>Please select your fitness goal</option>
+                                <option value="weight-loss">Weight Loss</option>
+                                <option value="muscle-gain">Muscle Gain</option>
+                                <option value="toning">Toning & Sculpting</option>
+                                <option value="endurance">Endurance & Stamina</option>
+                                <option value="health">General Health</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <label for="goals">Fitness Goals</label>
+                        </div>
+                        <div class="form-group">
+                            <select id="experience" name="experience" required aria-required="true">
+                                <option value="" selected disabled>Please select your experience level</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                            <label for="experience">Fitness Experience</label>
+                        </div>
+                        <div class="form-group">
+                            <select id="service" name="service" required aria-required="true">
+                                <option value="" selected disabled>Please select a service</option>
+                                <option value="online">Online Coaching</option>
+                                <option value="nutrition">Nutrition Planning</option>
+                                <option value="buy-program">Buy Program</option>
+                                <option value="package">Complete Package</option>
+                            </select>
+                            <label for="service">Interested In</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" rows="4" placeholder="Tell me more about your fitness journey and goals"></textarea>
+                            <label for="message">Additional Information</label>
+                        </div>
+                        <div class="button-container">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                    <div id="form-success" class="form-success" style="display: none;">
+                        <div class="icon"><i class="fas fa-check"></i></div>
+                        <h3>Thank You!</h3>
+                        <p>Your message has been successfully sent. Karina will get back to you shortly to discuss your fitness journey.</p>
+                        <p>In the meantime, feel free to explore the rest of the site for fitness tips and inspiration.</p>
+                        <div class="button-container">
+                            <button class="btn btn-primary" onclick="window.location.href='#services'">Explore Services</button>
+                            <button class="btn btn-secondary" onclick="window.location.href='#home'">Back to Home</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-info">
+                    <h3>Let's Connect</h3>
+                    <p>Have questions before you sign up? Feel free to reach out directly.</p>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>info@proteinprincess.com</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <span>(123) 456-7890</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Downtown Fitness Studio, City</span>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-icon" data-tooltip="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon" data-tooltip="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-icon" data-tooltip="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="transformations" class="transformations">
+        <div class="container">
+            <div class="section-header">
+                <h2>Transformation Results</h2>
+                <p>Real results from dedicated clients</p>
+            </div>
+            <div class="transformations-grid">
+                <div class="transformation-card">
+                    <div class="transformation-images">
+                        <div class="before-image">
+                            <!-- Add lazy loading -->
+                            <img src="images/IMG_4189.jpeg" alt="Before Transformation" loading="lazy">
+                            <span class="label">BEFORE</span>
+                        </div>
+                        <div class="after-image">
+                            <!-- Add lazy loading -->
+                            <img src="images/IMG_6042.jpeg" alt="After Transformation" loading="lazy">
+                            <span class="label">AFTER</span>
+                        </div>
+                    </div>
+                    <div class="transformation-info">
+                        <h3>12 Week Transformation</h3>
+                        <p>Custom nutrition plan + 4x weekly training sessions</p>
+                    </div>
+                </div>
+                <div class="transformation-card">
+                    <div class="transformation-images">
+                        <div class="before-image">
+                            <!-- Add lazy loading -->
+                            <img src="images/IMG_2024_08_21-16_43_53_2390_67168800.jpeg" alt="Before Transformation" loading="lazy">
+                            <span class="label">BEFORE</span>
+                        </div>
+                        <div class="after-image">
+                            <!-- Add lazy loading -->
+                            <img src="images/IMG_2024_08_21-17_02_01_4530_E5DD4131.jpeg" alt="After Transformation" loading="lazy">
+                            <span class="label">AFTER</span>
+                        </div>
+                    </div>
+                    <div class="transformation-info">
+                        <h3>8 Week Shred</h3>
+                        <p>Specialized cutting program + HIIT training</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="images/IMG_3674.png" alt="Karina Fitness" class="footer-logo-img">
+                </div>
+                <div class="footer-nav">
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#transformations">Transformations</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" id="privacyPolicy">Privacy Policy</a>
+                    <a href="#" id="termsConditions">Terms & Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <a href="#" class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-chevron-up"></i></a>
+
+    <script src="script.js"></script>
+</body>
+</html> 
