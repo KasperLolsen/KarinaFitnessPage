@@ -1,19 +1,68 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Performance monitoring
+    // Console log to check if script is running
+    console.log("Script started loading");
+    
+    // Simplify performance timing to avoid potential errors
+    try {
     const perfData = window.performance.timing;
     const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
     console.log(`Page load time: ${pageLoadTime/1000} seconds`);
+    } catch(e) {
+        console.log("Error tracking performance:", e);
+    }
     
-    // Show page after loading with skeleton screens
-    const setupSkeletonLoading = () => {
-        // Replace content with skeletons during loading
-        const skeletonElements = document.querySelectorAll('.skeleton-target');
-        skeletonElements.forEach(el => {
-            el.classList.add('skeleton');
-            el.setAttribute('aria-busy', 'true');
-        });
+    // Define theme toggle functions
+    // Add theme toggle button
+    const createThemeToggle = () => {
+        if (!document.querySelector('.theme-toggle')) {
+            console.log("Creating theme toggle");
+            const themeToggle = document.createElement('button');
+            themeToggle.className = 'theme-toggle';
+            themeToggle.setAttribute('aria-label', 'Toggle dark mode');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            document.body.appendChild(themeToggle);
+            
+            // Add click event listener
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Make it visible immediately
+            themeToggle.style.display = 'flex';
+        }
     };
 
+    // Toggle between dark and light theme
+    function toggleTheme() {
+        const body = document.body;
+        const themeToggle = document.querySelector('.theme-toggle i');
+        
+        body.classList.toggle('dark-mode');
+        
+        if (body.classList.contains('dark-mode')) {
+            themeToggle.className = 'fas fa-sun';
+            localStorage.setItem('theme', 'dark');
+        } else {
+            themeToggle.className = 'fas fa-moon';
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    // Check for saved theme preference
+    const loadThemePreference = () => {
+        const savedTheme = localStorage.getItem('theme');
+        const themeToggle = document.querySelector('.theme-toggle i');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            if (themeToggle) {
+                themeToggle.className = 'fas fa-sun';
+            }
+        }
+    };
+    
+    // Create theme toggle only once
+    createThemeToggle();
+    loadThemePreference();
+    
+    // Initialize skeleton screens if needed
     const hideSkeletons = () => {
         const skeletonElements = document.querySelectorAll('.skeleton-target');
         skeletonElements.forEach(el => {
@@ -22,15 +71,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Initialize and then hide loader
-    setupSkeletonLoading();
-    setTimeout(() => {
-        document.querySelector('.loader').style.opacity = '0';
-        hideSkeletons();
-        setTimeout(() => {
-            document.querySelector('.loader').style.display = 'none';
-        }, 500);
-    }, 1000);
+    // Hide skeletons after a short delay
+    setTimeout(hideSkeletons, 300);
 
     // Elements
     const header = document.querySelector('header');
@@ -569,25 +611,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Back to top button with optimized scroll listener
+    // Back to top button functionality
     const backToTopButton = document.getElementById('backToTop');
     if (backToTopButton) {
-        let backToTopTicking = false;
-        window.addEventListener('scroll', function() {
-            if (!backToTopTicking) {
-                window.requestAnimationFrame(function() {
-                    if (window.pageYOffset > 300) {
-                        backToTopButton.classList.add('show');
-                    } else {
-                        backToTopButton.classList.remove('show');
-                    }
-                    backToTopTicking = false;
-                });
-                backToTopTicking = true;
+        // Show/hide back to top button based on scroll position
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
             }
         });
-
-        backToTopButton.addEventListener('click', function(e) {
+        
+        // Scroll to top when button is clicked
+        backToTopButton.addEventListener('click', (e) => {
             e.preventDefault();
             window.scrollTo({
                 top: 0,
@@ -679,29 +716,52 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Mobile Menu Toggle
     const createMobileMenu = () => {
-        // Create mobile menu toggle button if it doesn't exist
-        if (!document.querySelector('.mobile-menu-toggle')) {
-            const mobileMenuToggle = document.createElement('div');
-            mobileMenuToggle.className = 'mobile-menu-toggle';
-            for (let i = 0; i < 3; i++) {
-                const span = document.createElement('span');
-                mobileMenuToggle.appendChild(span);
+        // Remove any existing mobile navigation elements first
+        const existingMobileNav = document.querySelector('.mobile-nav');
+        if (existingMobileNav) {
+            existingMobileNav.parentNode.removeChild(existingMobileNav);
+        }
+        
+        const existingToggle = document.querySelector('.mobile-menu-toggle');
+        if (existingToggle) {
+            existingToggle.parentNode.removeChild(existingToggle);
+        }
+        
+        // Find and remove any duplicate navigation at the bottom of the page
+        const bodyNavs = document.querySelectorAll('body > nav:not(header nav)');
+        bodyNavs.forEach(nav => {
+            if (nav !== document.querySelector('header nav')) {
+                nav.parentNode.removeChild(nav);
             }
-            
-            // Create mobile navigation if it doesn't exist
-            if (!document.querySelector('.mobile-nav')) {
-                const mobileNav = document.createElement('nav');
-                mobileNav.className = 'mobile-nav';
-                
-                // Clone the desktop navigation links
-                const desktopNav = document.querySelector('nav ul').cloneNode(true);
-                mobileNav.appendChild(desktopNav);
-                
-                document.body.appendChild(mobileNav);
-            }
+        });
+        
+        // Create mobile menu toggle button
+        const mobileMenuToggle = document.createElement('div');
+        mobileMenuToggle.className = 'mobile-menu-toggle';
+        for (let i = 0; i < 3; i++) {
+            const span = document.createElement('span');
+            mobileMenuToggle.appendChild(span);
+        }
+        
+        // Create mobile navigation
+        const mobileNav = document.createElement('nav');
+        mobileNav.className = 'mobile-nav';
+        mobileNav.setAttribute('aria-label', 'Mobile navigation');
+        
+        // Clone the desktop navigation links
+        const headerNav = document.querySelector('header nav ul');
+        if (headerNav) {
+            const desktopNav = headerNav.cloneNode(true);
+            mobileNav.appendChild(desktopNav);
             
             // Add toggle button to header
-            document.querySelector('header .container').appendChild(mobileMenuToggle);
+            const headerContainer = document.querySelector('header .container');
+            if (headerContainer) {
+                headerContainer.appendChild(mobileMenuToggle);
+            }
+            
+            // Add mobile nav to body (as the first child to ensure proper z-index)
+            document.body.insertBefore(mobileNav, document.body.firstChild);
             
             // Add event listener for toggle
             mobileMenuToggle.addEventListener('click', toggleMobileMenu);
@@ -723,55 +783,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = '';
         }
     }
-    
-    // Add theme toggle button
-    const createThemeToggle = () => {
-        if (!document.querySelector('.theme-toggle')) {
-            const themeToggle = document.createElement('div');
-            themeToggle.className = 'theme-toggle';
-            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            document.body.appendChild(themeToggle);
-            
-            // Show theme toggle after scrolling
-            window.addEventListener('scroll', function() {
-                if (window.pageYOffset > 300) {
-                    themeToggle.classList.add('show');
-                } else {
-                    themeToggle.classList.remove('show');
-                }
-            });
-            
-            // Toggle dark/light mode
-            themeToggle.addEventListener('click', toggleTheme);
-        }
-    };
-    
-    // Toggle between dark and light theme
-    function toggleTheme() {
-        const body = document.body;
-        const themeToggle = document.querySelector('.theme-toggle i');
-        
-        body.classList.toggle('dark-mode');
-        
-        if (body.classList.contains('dark-mode')) {
-            themeToggle.className = 'fas fa-sun';
-            localStorage.setItem('theme', 'dark');
-        } else {
-            themeToggle.className = 'fas fa-moon';
-            localStorage.setItem('theme', 'light');
-        }
-    }
-    
-    // Check for saved theme preference
-    const loadThemePreference = () => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-mode');
-            if (document.querySelector('.theme-toggle i')) {
-                document.querySelector('.theme-toggle i').className = 'fas fa-sun';
-            }
-        }
-    };
     
     // Create image lightbox functionality
     const setupImageLightbox = () => {
@@ -887,6 +898,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Show modal with content
     function showModal(title, content) {
+        console.log("showModal called with title:", title);
+        try {
         // Create modal container
         const modalOverlay = document.createElement('div');
         modalOverlay.className = 'modal-overlay';
@@ -974,6 +987,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.body.removeChild(modalOverlay);
                 document.body.style.overflow = '';
             }, 300);
+            }
+            
+            console.log("Modal successfully created and displayed");
+        } catch (error) {
+            console.error("Error in showModal:", error);
+            alert("Error in showModal: " + error.message);
         }
     }
     
@@ -1089,258 +1108,91 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 2. Fitness Quiz/Calculator
     const setupFitnessQuiz = () => {
-        // Create the quiz button and add it near the call-to-action
-        const heroContent = document.querySelector('.hero-content');
-        if (!heroContent) return;
+        console.log("Setting up fitness quiz from script.js (backup approach)");
         
-        const quizButton = document.createElement('button');
-        quizButton.className = 'btn btn-secondary quiz-button btn-wide';
-        quizButton.innerHTML = '<i class="fas fa-dumbbell"></i> Find Your Ideal Plan';
-        quizButton.style.marginLeft = '10px';
-        
-        const ctaButton = heroContent.querySelector('.btn');
-        if (ctaButton) {
-            ctaButton.parentNode.insertBefore(quizButton, ctaButton.nextSibling);
-        } else {
-            heroContent.appendChild(quizButton);
+        // Get the button
+        const quizButton = document.querySelector('#fitnessQuizBtn');
+        if (!quizButton) {
+            console.error("Quiz button not found in script.js");
+            return;
         }
         
-        // Create the quiz content
-        const quizContent = `
-            <h3>Find Your Ideal Fitness Plan</h3>
-            <div class="quiz-step" data-step="1">
-                <h4>What is your primary fitness goal?</h4>
-                <div class="quiz-options">
-                    <button data-value="weight-loss">Weight Loss</button>
-                    <button data-value="muscle">Muscle Gain</button>
-                    <button data-value="toning">Toning & Sculpting</button>
-                    <button data-value="energy">Energy & Endurance</button>
-                </div>
-            </div>
-            <div class="quiz-step" data-step="2" style="display: none;">
-                <h4>What is your current activity level?</h4>
-                <div class="quiz-options">
-                    <button data-value="beginner">Beginner (0-1 days/week)</button>
-                    <button data-value="moderate">Moderate (2-3 days/week)</button>
-                    <button data-value="active">Active (4-5 days/week)</button>
-                    <button data-value="very-active">Very Active (6+ days/week)</button>
-                </div>
-            </div>
-            <div class="quiz-step" data-step="3" style="display: none;">
-                <h4>How much time can you commit to exercise?</h4>
-                <div class="quiz-options">
-                    <button data-value="short">15-30 min/day</button>
-                    <button data-value="moderate">30-60 min/day</button>
-                    <button data-value="long">60+ min/day</button>
-                </div>
-            </div>
-            <div class="quiz-results" style="display: none;">
-                <h4>Your Recommended Program:</h4>
-                <div class="result-content"></div>
-                <button class="btn btn-primary quiz-cta">Get Started</button>
-                <button class="btn btn-secondary quiz-restart">Start Over</button>
-            </div>
-            <div class="quiz-progress">
-                <span class="progress-dot active" data-step="1"></span>
-                <span class="progress-dot" data-step="2"></span>
-                <span class="progress-dot" data-step="3"></span>
-            </div>
-        `;
-        
-        // Quiz logic
-        quizButton.addEventListener('click', () => {
-            const quizAnswers = {
-                goal: '',
-                activity: '',
-                time: ''
-            };
-            
-            showModal('Fitness Quiz', quizContent);
-            
-            // Add custom class to modal for quiz
-            document.querySelector('.modal').classList.add('quiz-modal');
-            
-            // Get the modal container
-            const modalContent = document.querySelector('.modal');
-            
-            // Add event listeners to quiz options
-            const quizOptions = modalContent.querySelectorAll('.quiz-options button');
-            quizOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const step = this.closest('.quiz-step').dataset.step;
-                    const value = this.dataset.value;
-                    
-                    // Save answer
-                    if (step === '1') quizAnswers.goal = value;
-                    if (step === '2') quizAnswers.activity = value;
-                    if (step === '3') quizAnswers.time = value;
-                    
-                    // Highlight selected option
-                    const stepOptions = this.closest('.quiz-options').querySelectorAll('button');
-                    stepOptions.forEach(btn => btn.classList.remove('selected'));
-                    this.classList.add('selected');
-                    
-                    // Add animation for transition
-                    const currentStep = modalContent.querySelector(`.quiz-step[data-step="${step}"]`);
-                    currentStep.style.animation = 'fadeOut 0.3s forwards';
-                    
-                    // Move to next step or show results
-                    setTimeout(() => {
-                        currentStep.style.display = 'none';
-                        
-                        if (step === '3') {
-                            showQuizResults(quizAnswers);
-                        } else {
-                            const nextStep = parseInt(step) + 1;
-                            const nextStepEl = modalContent.querySelector(`.quiz-step[data-step="${nextStep}"]`);
-                            nextStepEl.style.display = 'block';
-                            nextStepEl.style.animation = 'fadeIn 0.3s forwards';
-                            updateProgress(nextStep);
-                        }
-                    }, 300);
-                });
-            });
-        
-            // Update progress dots
-            function updateProgress(step) {
-                const dots = modalContent.querySelectorAll('.progress-dot');
-                dots.forEach(dot => {
-                    dot.classList.remove('active');
-                    if (parseInt(dot.dataset.step) <= parseInt(step)) {
-                        dot.classList.add('active');
-                    }
-                });
-            }
-            
-            // Show quiz results
-            function showQuizResults(answers) {
-                // Hide all steps
-                modalContent.querySelectorAll('.quiz-step').forEach(step => {
-                    step.style.display = 'none';
-                });
+        // Only add handler if not already set in HTML
+        if (!quizButton.onclick) {
+            console.log("No onclick handler found on button - adding one");
+            quizButton.onclick = function(e) {
+                console.log("Quiz button clicked from script.js handler");
                 
-                // Determine recommendation based on answers
-                let programName, programDescription;
-                
-                if (answers.goal === 'weight-loss') {
-                    if (answers.activity === 'beginner') {
-                        programName = 'Beginner Fat Loss';
-                        programDescription = 'A gentle introduction to fitness focused on sustainable weight loss through a combination of cardio and strength training.';
-                    } else {
-                        programName = 'Advanced Fat Burn';
-                        programDescription = 'High-intensity interval training combined with strategic nutrition planning for maximum fat loss.';
-                    }
-                } else if (answers.goal === 'muscle') {
-                    programName = 'Muscle Building Focus';
-                    programDescription = 'Progressive resistance training designed to build lean muscle mass with supporting nutrition guidance.';
-                } else if (answers.goal === 'toning') {
-                    programName = 'Body Sculpting';
-                    programDescription = 'A balance of resistance training and cardio designed to define muscles and improve overall body composition.';
-                } else {
-                    programName = 'Endurance Builder';
-                    programDescription = 'Cardio-focused training with endurance elements to boost stamina and daily energy levels.';
+                // Use the global function if it exists
+                if (typeof openFitnessQuiz === 'function') {
+                    return openFitnessQuiz();
                 }
                 
-                // Add time recommendation
-                let timeRecommendation = '';
-                if (answers.time === 'short') {
-                    timeRecommendation = 'This program is adapted for shorter, efficient workouts that fit into your busy schedule.';
-                } else if (answers.time === 'long') {
-                    timeRecommendation = 'This program takes advantage of your available time with comprehensive workouts for maximum results.';
-                }
+                // Fallback implementation
+                alert("Fitness Quiz from script.js");
                 
-                // Display results
-                const resultContent = modalContent.querySelector('.result-content');
-                resultContent.innerHTML = `
-                    <div class="quiz-result-card">
-                        <h5>${programName}</h5>
-                        <p>${programDescription}</p>
-                        <p><small>${timeRecommendation}</small></p>
-                    </div>
+                // Create a simple modal
+                const overlay = document.createElement('div');
+                overlay.style.position = 'fixed';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.width = '100%';
+                overlay.style.height = '100%';
+                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                overlay.style.zIndex = '99999';
+                overlay.style.display = 'flex';
+                overlay.style.justifyContent = 'center';
+                overlay.style.alignItems = 'center';
+                
+                const modal = document.createElement('div');
+                modal.style.backgroundColor = 'white';
+                modal.style.padding = '30px';
+                modal.style.borderRadius = '8px';
+                modal.style.maxWidth = '800px';
+                modal.style.width = '90%';
+                modal.style.maxHeight = '80vh';
+                modal.style.overflowY = 'auto';
+                modal.style.position = 'relative';
+                
+                // Add close button
+                const closeButton = document.createElement('button');
+                closeButton.innerHTML = '&times;';
+                closeButton.style.position = 'absolute';
+                closeButton.style.top = '10px';
+                closeButton.style.right = '15px';
+                closeButton.style.border = 'none';
+                closeButton.style.background = 'none';
+                closeButton.style.fontSize = '24px';
+                closeButton.style.cursor = 'pointer';
+                closeButton.onclick = function() {
+                    document.body.removeChild(overlay);
+                };
+                
+                // Simple content
+                modal.innerHTML = `
+                    <h2 style="margin-top: 0; margin-bottom: 20px;">Find Your Ideal Fitness Plan (Fallback)</h2>
+                    <p>Our fallback fitness quiz will help you find the perfect workout plan.</p>
+                    <button style="padding: 10px 20px; background: #ff6b6b; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 20px;">OK</button>
                 `;
                 
-                // Show results
-                modalContent.querySelector('.quiz-results').style.display = 'block';
+                // Add close button
+                modal.appendChild(closeButton);
                 
-                // Add event listener to CTA button
-                modalContent.querySelector('.quiz-cta').addEventListener('click', () => {
-                    // Close modal
-                    document.querySelector('.modal-overlay').click();
-                    
-                    // Scroll to contact section
-                    const contactSection = document.querySelector('#contact');
-                    if (contactSection) {
-                        const headerHeight = document.querySelector('header').offsetHeight;
-                        const contactPosition = contactSection.getBoundingClientRect().top + window.pageYOffset;
-                        
-                        window.scrollTo({
-                            top: contactPosition - headerHeight,
-                            behavior: 'smooth'
-                        });
-                        
-                        // Pre-fill form with quiz results
-                        const goalsSelect = document.querySelector('#goals');
-                        if (goalsSelect) {
-                            let goalValue = '';
-                            switch(answers.goal) {
-                                case 'weight-loss': goalValue = 'weight-loss'; break;
-                                case 'muscle': goalValue = 'muscle-gain'; break;
-                                case 'toning': goalValue = 'toning'; break;
-                                case 'energy': goalValue = 'endurance'; break;
-                            }
-                            
-                            if (goalValue) {
-                                goalsSelect.value = goalValue;
-                                goalsSelect.parentNode.classList.add('field-has-value');
-                            }
-                        }
-                        
-                        // Also pre-fill experience level
-                        const experienceSelect = document.querySelector('#experience');
-                        if (experienceSelect) {
-                            let experienceValue = '';
-                            switch(answers.activity) {
-                                case 'beginner': experienceValue = 'beginner'; break;
-                                case 'moderate': experienceValue = 'beginner'; break;
-                                case 'active': experienceValue = 'intermediate'; break;
-                                case 'very-active': experienceValue = 'advanced'; break;
-                            }
-                            
-                            if (experienceValue) {
-                                experienceSelect.value = experienceValue;
-                                experienceSelect.parentNode.classList.add('field-has-value');
-                            }
-                        }
-                        
-                        // Focus name field
-                        const nameField = document.querySelector('#name');
-                        if (nameField) {
-                            setTimeout(() => {
-                                nameField.focus();
-                            }, 1000);
-                        }
-                    }
-                });
+                // Add to body
+                overlay.appendChild(modal);
+                document.body.appendChild(overlay);
                 
-                // Add event listener to restart button
-                modalContent.querySelector('.quiz-restart').addEventListener('click', () => {
-                    // Reset answers
-                    quizAnswers.goal = '';
-                    quizAnswers.activity = '';
-                    quizAnswers.time = '';
-                    
-                    // Reset selected options
-                    modalContent.querySelectorAll('.quiz-options button').forEach(btn => {
-                        btn.classList.remove('selected');
-                    });
-                    
-                    // Show first step
-                    modalContent.querySelector('.quiz-results').style.display = 'none';
-                    modalContent.querySelector('.quiz-step[data-step="1"]').style.display = 'block';
-                    updateProgress(1);
-                });
-            }
-        });
+                // Add click handler to the OK button
+                const okButton = modal.querySelector('button');
+                okButton.onclick = function() {
+                    document.body.removeChild(overlay);
+                };
+                
+                return false;
+            };
+        } else {
+            console.log("Button already has an onclick handler from HTML - not overriding");
+        }
     };
     
     // 3. Animated Statistics with Targeting Feature
@@ -1350,7 +1202,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Create a targeting UI
         const targetingUI = document.createElement('div');
-        targetingUI.className = 'stats-targeting';
+        targetingUI.className = 'stats-target active'
         targetingUI.innerHTML = `
             <button class="stats-target active" data-stat="all">All Statistics</button>
             <button class="stats-target" data-stat="experience">Experience</button>
@@ -1427,4 +1279,97 @@ document.addEventListener('DOMContentLoaded', function() {
     setupBeforeAfterSlider();
     setupFitnessQuiz();
     setupAnimatedStats();
+
+    // Function to remove duplicate navigation elements
+    const removeDuplicateNavigation = () => {
+        console.log("Removing duplicate navigation elements");
+        
+        // Remove any navigation elements directly under the body
+        const bodyNavs = document.querySelectorAll('body > nav:not(.mobile-nav), body > ul:not(header ul), body > div.nav, body > .navigation, body > .menu');
+        bodyNavs.forEach(nav => {
+            if (nav.parentNode === document.body && !nav.closest('header')) {
+                console.log("Removing navigation element:", nav);
+                nav.parentNode.removeChild(nav);
+            }
+        });
+        
+        // Also remove any cloned navigation in the footer
+        const footerNavs = document.querySelectorAll('footer nav, footer ul.nav, footer .nav, footer ul');
+        footerNavs.forEach(nav => {
+            console.log("Removing footer navigation element:", nav);
+            if (nav.parentNode) {
+                nav.parentNode.removeChild(nav);
+            }
+        });
+        
+        // Find all navigation links at the bottom of the page
+        const navLinks = ['home', 'about', 'services', 'transformations', 'testimonials', 'faq', 'contact'];
+        
+        // Find any element with these navigation links that's not in the header
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            const href = link.getAttribute('href').substring(1); // Remove the # character
+            if (navLinks.includes(href) && !link.closest('header')) {
+                // Check if this link is part of a navigation group
+                let parent = link.parentNode;
+                
+                // If it's in a list item, move up to the list
+                if (parent.tagName === 'LI') {
+                    parent = parent.parentNode;
+                }
+                
+                // If it's part of a list that contains multiple navigation links, remove the whole list
+                if (parent.tagName === 'UL' || parent.tagName === 'NAV') {
+                    const links = parent.querySelectorAll('a[href^="#"]');
+                    let navigationGroup = false;
+                    
+                    // Check if this is likely a navigation group
+                    if (links.length >= 3) {
+                        let navLinkCount = 0;
+                        links.forEach(navLink => {
+                            const navHref = navLink.getAttribute('href').substring(1);
+                            if (navLinks.includes(navHref)) {
+                                navLinkCount++;
+                            }
+                        });
+                        
+                        // If more than half are navigation links, it's a navigation group
+                        navigationGroup = (navLinkCount / links.length) > 0.5;
+                    }
+                    
+                    if (navigationGroup) {
+                        console.log("Removing navigation group:", parent);
+                        parent.style.display = 'none';
+                        parent.style.visibility = 'hidden';
+                        parent.style.opacity = '0';
+                        parent.style.pointerEvents = 'none';
+                        
+                        // Try to physically remove it if possible
+                        if (parent.parentNode) {
+                            parent.parentNode.removeChild(parent);
+                        }
+                    } else {
+                        // Just remove this individual link
+                        console.log("Removing navigation link:", link);
+                        link.style.display = 'none';
+                        link.style.visibility = 'hidden';
+                        link.style.opacity = '0';
+                        link.style.pointerEvents = 'none';
+                        
+                        if (link.parentNode) {
+                            link.parentNode.removeChild(link);
+                        }
+                    }
+                }
+            }
+        });
+    };
+
+    // Call this function on page load
+    removeDuplicateNavigation();
+
+    // Also run it after a short delay to catch any dynamically added elements
+    setTimeout(removeDuplicateNavigation, 1000);
+
+    // And run it whenever the window is resized (which might trigger responsive layout changes)
+    window.addEventListener('resize', removeDuplicateNavigation);
 }); 

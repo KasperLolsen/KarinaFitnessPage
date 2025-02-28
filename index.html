@@ -11,17 +11,128 @@
     <link rel="stylesheet" href="https://use.typekit.net/msa4tge.css"> <!-- Updated to Sequel font -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Preload critical hero image -->
-    <link rel="preload" href="images/IMG_6917.jpeg" as="image">
+    <link rel="preload" href="images/IMG_3281.jpeg" as="image">
     <!-- Add critical CSS inline -->
     <style>
         /* Critical CSS for above-the-fold content */
-        .loader, header, .hero {
+        header, .hero {
             visibility: visible;
         }
         /* Font display swap to avoid invisible text */
         @font-face {
             font-family: 'sequel-sans';
             font-display: swap;
+        }
+        /* Hero image cropping to focus on face/head */
+        .hero.parallax-bg {
+            background-image: none !important; /* Remove the main background */
+            height: 100vh !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+        
+        /* Style the pseudo-element to properly crop the face */
+        .hero.parallax-bg::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: url('images/IMG_3281.jpeg') center 30% / cover no-repeat !important;
+            opacity: 1 !important;
+            z-index: 0 !important;
+        }
+        
+        /* Ensure any nested content in hero is properly positioned */
+        .hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        /* Custom styles override */
+        @media (prefers-color-scheme: dark) {
+            .hero-content h1, 
+            .hero-content p, 
+            .hero-content .btn {
+                color: white !important;
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            }
+            
+            .form-group input, 
+            .form-group select, 
+            .form-group textarea {
+                background-color: rgba(255,255,255,0.12);
+                border: 1px solid rgba(255,255,255,0.2);
+                color: white;
+            }
+            
+            .form-group label,
+            .helper-text {
+                color: rgba(255,255,255,0.8);
+            }
+            
+            .form-group select option {
+                background-color: #333;
+                color: white;
+            }
+        }
+        /* Force hide metric tabs */
+        body .metrics .container > :not(.metrics-grid),
+        body .metrics ul,
+        body .metrics nav,
+        body .metrics button,
+        body .metrics .filter-buttons,
+        body .metrics [class*="tab"],
+        body .metrics [id*="All"],
+        body .metrics [id*="Experience"],
+        body .metrics [id*="Client"],
+        body .metrics [id*="Program"],
+        body .metrics [id*="Success"] {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            opacity: 0 !important;
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+        
+        /* Extra selector to hide the specific buttons shown in the screenshot */
+        body [class*="statistic"],
+        body [class*="metric"] + ul,
+        body .metrics > .container > *:first-child:not(.metrics-grid) {
+            display: none !important;
+        }
+
+        /* Form element fixes for cross-browser compatibility */
+        select.form-control {
+            text-indent: 1px;
+            text-overflow: '';
+        }
+        
+        /* Fix for firefox */
+        @-moz-document url-prefix() {
+            select.form-control {
+                padding-right: 25px !important;
+                background-position: right 10px center;
+            }
+        }
+        
+        /* Ensure proper display of placeholders */
+        ::placeholder {
+            color: #999;
+            opacity: 1;
+        }
+        
+        :-ms-input-placeholder {
+            color: #999;
+        }
+        
+        ::-ms-input-placeholder {
+            color: #999;
         }
     </style>
     <!-- Add structured data for better SEO -->
@@ -47,11 +158,6 @@
 <body>
     <!-- Scroll Progress Indicator -->
     <div class="scroll-progress" aria-hidden="true"></div>
-
-    <!-- Preloader -->
-    <div class="loader" id="preloader">
-        <div class="spinner"></div>
-    </div>
 
     <!-- Custom cursor for desktop devices -->
     <div class="custom-cursor" aria-hidden="true"></div>
@@ -82,6 +188,7 @@
                 <p class="animate-fade-in">Ready to become the Protein Princess you were born to be?</p>
                 <div class="button-container">
                     <a href="#contact" class="btn btn-primary animate-fade-in">Get Started Today</a>
+                    <button id="fitnessQuizBtn" class="btn btn-secondary animate-fade-in" onclick="openFitnessQuiz()"><i class="fas fa-clipboard-list" style="margin-right: 8px;"></i>Find Your Plan</button>
                 </div>
             </div>
         </div>
@@ -94,22 +201,78 @@
 
     <section class="metrics texture-bg">
         <div class="container">
+            <style>
+                /* Direct targeting of the metric tabs shown in the image */
+                .metrics nav,
+                .metrics ul,
+                .metrics li,
+                .metrics button,
+                [id^="All"], 
+                [id^="Experience"], 
+                [id^="Clients"], 
+                [id^="Programs"], 
+                [id^="Success"],
+                .metrics-tabs,
+                .metrics .nav,
+                .metrics-nav,
+                .metrics-filter,
+                .filter-buttons,
+                /* Catch-all for any buttons within the metrics section */
+                .metrics button,
+                /* Target specific elements visible in the image */
+                button:contains("All Statistics"),
+                button:contains("Experience"),
+                button:contains("Clients"),
+                button:contains("Programs"),
+                button:contains("Success Rate"),
+                /* Target by direct styling */
+                [style*="border-radius: 30px"],
+                .metrics [style*="box-shadow"],
+                .metrics > *:first-child:not(.metrics-grid),
+                .metrics > .container > *:first-child:not(.metrics-grid) {
+                    display: none !important;
+                    visibility: hidden !important;
+                    opacity: 0 !important;
+                    pointer-events: none !important;
+                    height: 0 !important;
+                    width: 0 !important;
+                    overflow: hidden !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                
+                /* Ensure the metrics grid itself displays properly */
+                .metrics-grid {
+                    margin-top: 40px !important;
+                    display: grid !important;
+                    grid-template-columns: repeat(3, 1fr) !important;
+                    max-width: 900px !important;
+                    margin-left: auto !important;
+                    margin-right: auto !important;
+                    justify-content: center !important;
+                    gap: 30px !important;
+                }
+                
+                @media (max-width: 768px) {
+                    .metrics-grid {
+                        grid-template-columns: repeat(1, 1fr) !important;
+                        max-width: 300px !important;
+                    }
+                }
+            </style>
             <div class="metrics-grid">
                 <div class="metric-item" data-aos="fade-up">
-                    <div class="metric-number" data-count="5">0</div>
+                    <div class="metric-number" data-count="3">0</div>
                     <div class="metric-label">Years Experience</div>
                 </div>
                 <div class="metric-item" data-aos="fade-up" data-aos-delay="100">
-                    <div class="metric-number" data-count="200">0</div>
+                    <div class="metric-number" data-count="20">0</div>
                     <div class="metric-label">Clients Transformed</div>
+                    <div class="metric-plus">+</div>
                 </div>
                 <div class="metric-item" data-aos="fade-up" data-aos-delay="200">
-                    <div class="metric-number" data-count="15">0</div>
+                    <div class="metric-number" data-count="5">0</div>
                     <div class="metric-label">Fitness Programs</div>
-                </div>
-                <div class="metric-item" data-aos="fade-up" data-aos-delay="300">
-                    <div class="metric-number" data-count="98">0</div>
-                    <div class="metric-label">Success Rate %</div>
                 </div>
             </div>
         </div>
@@ -130,8 +293,8 @@
                 </div>
                 <div class="about-text animate-slide-right">
                     <h3>Passionate About Helping You Reach Your Goals</h3>
-                    <p>With over 5 years of experience in personal training and nutrition coaching, I'm dedicated to helping clients of all fitness levels achieve their goals and transform their lives.</p>
-                    <p>My approach focuses on sustainable fitness habits, personalized workout plans, and nutrition guidance that fits your lifestyle.</p>
+                    <p>With experience in personal training and nutrition coaching, I'm absolutely thrilled to help my fabulous clients of all fitness levels achieve their dreams and transform their lives!</p>
+                    <p>My approach is all about creating tough, yet sustainable fitness habits, personalized workout plans, and nutrition guidance that perfectly fits your unique lifestyle and goals!</p>
                     <ul class="credentials">
                         <li>Certified Personal Trainer (CPT)</li>
                         <li>Nutrition and Wellness Specialist</li>
@@ -205,16 +368,16 @@
                 </div>
                 <div class="testimonial-card">
                     <div class="testimonial-content">
-                        <p>"After struggling with various workout programs, Karina's nutrition guidance and training plan finally helped me build the muscle definition I wanted."</p>
+                        <p>"After years of being a lanky, skinny boy, Karina helped me gain over 20kg. Over the course of 3 years she has helped me tremendously with my diet and training."</p>
                     </div>
                     <div class="testimonial-author">
                         <div class="author-image">
                             <!-- Add lazy loading -->
-                            <img src="images/IMG_2834.jpeg" alt="Michael T." class="client-img" loading="lazy">
+                            <img src="images/IMG_2921.jpg" alt="Kasper O." class="client-img" loading="lazy">
                         </div>
                         <div class="author-info">
-                            <h4>Michael T.</h4>
-                            <p>Gained muscle & improved strength</p>
+                            <h4>Kasper O.</h4>
+                            <p>Gained 20kg in 3 years</p>
                         </div>
                     </div>
                 </div>
@@ -259,7 +422,7 @@
                 <div class="faq-item">
                     <div class="faq-question">What's included in the nutrition planning service?</div>
                     <div class="faq-answer">
-                        <p>My nutrition planning service includes a comprehensive assessment of your current eating habits, dietary preferences, and nutritional needs. You'll receive a customized meal plan with recipes, grocery lists, and portion guidance. I also provide education on macronutrients, meal timing, and nutrition strategies specific to your goals. Regular check-ins and adjustments are included to ensure your plan evolves with your progress.</p>
+                        <p>My nutrition planning service includes a comprehensive assessment of your current eating habits, dietary preferences, and nutritional needs. You'll get access to an app where you will receive a customized meal plan with recipes, training plans and guidance. I also provide education on macronutrients, meal timing, and nutrition strategies specific to your goals. Regular check-ins and adjustments are included to ensure your plan evolves with your progress.</p>
                     </div>
                 </div>
                 <div class="faq-item">
@@ -278,60 +441,227 @@
                 <h2>Ready to <span class="highlight-text">Transform</span>?</h2>
                 <p>Fill out the form below to get started on your fitness journey</p>
             </div>
+            <style>
+                .contact-form {
+                    max-height: none !important;
+                    overflow-y: visible !important;
+                }
+                
+                .contact-section {
+                    background-color: #f9f9f9;
+                }
+                
+                .form-group {
+                    margin-bottom: 20px;
+                    position: relative;
+                    margin-top: 8px;
+                }
+                
+                .form-group input, 
+                .form-group select, 
+                .form-group textarea {
+                    padding: 15px !important;
+                    width: 100%;
+                    border: 2px solid #eaeaea;
+                    border-radius: 12px;
+                    background-color: #ffffff;
+                    font-family: 'sequel-sans', sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                    appearance: none;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+                    transition: all 0.3s ease;
+                }
+                
+                .form-group select {
+                    cursor: pointer;
+                    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a2be2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                    background-repeat: no-repeat;
+                    background-position: right 15px center;
+                    background-size: 16px;
+                    padding-right: 40px !important;
+                }
+                
+                .form-group input:focus, 
+                .form-group select:focus, 
+                .form-group textarea:focus {
+                    outline: none;
+                    border-color: #8a2be2;
+                    box-shadow: 0 2px 10px rgba(138, 43, 226, 0.15);
+                    background-color: #fff;
+                }
+                
+                .form-group label {
+                    position: absolute;
+                    top: -14px;
+                    left: 15px;
+                    background-color: #ffffff;
+                    padding: 0 10px;
+                    font-size: 14px;
+                    color: #8a2be2;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                    z-index: 5;
+                    line-height: 1;
+                    border-radius: 4px;
+                    box-shadow: 0 0 0 4px #ffffff;
+                }
+                
+                .form-group select option {
+                    padding: 10px;
+                    font-size: 16px;
+                    background-color: #fff;
+                    color: #333;
+                }
+                
+                .form-group select option:first-child {
+                    color: #999;
+                }
+                
+                .contact-content {
+                    padding: 30px 0;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 40px;
+                }
+                
+                .contact-form {
+                    flex: 1 1 500px;
+                    background: #ffffff;
+                    padding: 30px;
+                    border-radius: 16px;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+                    border: 2px solid #f0f0f0;
+                }
+                
+                .contact-info {
+                    flex: 1 1 300px;
+                }
+                
+                textarea#message {
+                    min-height: 120px !important;
+                    height: 120px;
+                    resize: vertical;
+                }
+                
+                button[type="submit"] {
+                    margin-top: 20px;
+                    width: 100%;
+                    padding: 15px !important;
+                    background: linear-gradient(90deg, #8a2be2, #9370db) !important;
+                    color: white !important;
+                    border: none !important;
+                    border-radius: 50px !important;
+                    font-weight: 600 !important;
+                    font-size: 18px !important;
+                    cursor: pointer !important;
+                    transition: all 0.3s ease !important;
+                    box-shadow: 0 5px 15px rgba(138, 43, 226, 0.2) !important;
+                    display: block !important;
+                    text-align: center !important;
+                }
+                
+                button[type="submit"]:hover {
+                    transform: translateY(-2px) !important;
+                    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.3) !important;
+                    background: linear-gradient(90deg, #7b27cd, #8461d5) !important;
+                }
+                
+                .contact.texture-bg {
+                    background-color: #ffffff;
+                }
+                
+                /* Override any dark mode settings for the form */
+                @media (prefers-color-scheme: dark) {
+                    .contact-form {
+                        background: #ffffff !important;
+                        border-color: #f0f0f0 !important;
+                    }
+                    
+                    .form-group input, 
+                    .form-group select, 
+                    .form-group textarea {
+                        background-color: #ffffff !important;
+                        border: 2px solid #eaeaea !important;
+                        color: #333 !important;
+                    }
+                    
+                    .form-group label {
+                        background-color: #ffffff !important;
+                        color: #8a2be2 !important;
+                    }
+                    
+                    .form-group select {
+                        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a2be2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+                    }
+                    
+                    .form-group select option {
+                        background-color: #ffffff !important;
+                        color: #333 !important;
+                    }
+                    
+                    .contact.texture-bg {
+                        background-color: #f9f9f9 !important;
+                    }
+                    
+                    ::placeholder {
+                        color: #999 !important;
+                        opacity: 1 !important;
+                    }
+                }
+            </style>
             <div class="contact-content">
                 <div class="contact-form">
-                    <form id="interest-form" action="https://formspree.io/f/movjogqa" method="POST">
-                        <input type="hidden" name="_subject" value="New Fitness Inquiry">
+                    <form id="contactForm">
                         <div class="form-group">
-                            <input type="text" id="name" name="name" placeholder="Your full name" required aria-required="true">
-                            <label for="name">Full Name</label>
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
                         </div>
                         <div class="form-group">
-                            <input type="email" id="email" name="email" placeholder="Your email address" required aria-required="true">
-                            <label for="email">Email Address</label>
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
                         </div>
                         <div class="form-group">
-                            <input type="tel" id="phone" name="phone" placeholder="Your phone number (optional)" aria-describedby="phone-help">
-                            <label for="phone">Phone Number</label>
-                            <span id="phone-help" class="helper-text">Optional</span>
+                            <label for="phone">Phone (optional)</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Your Phone (optional)">
                         </div>
                         <div class="form-group">
-                            <select id="goals" name="goals" required aria-required="true">
-                                <option value="" selected disabled>Please select your fitness goal</option>
-                                <option value="weight-loss">Weight Loss</option>
-                                <option value="muscle-gain">Muscle Gain</option>
-                                <option value="toning">Toning & Sculpting</option>
-                                <option value="endurance">Endurance & Stamina</option>
-                                <option value="health">General Health</option>
-                                <option value="other">Other</option>
-                            </select>
                             <label for="goals">Fitness Goals</label>
-                        </div>
-                        <div class="form-group">
-                            <select id="experience" name="experience" required aria-required="true">
-                                <option value="" selected disabled>Please select your experience level</option>
-                                <option value="beginner">Beginner</option>
-                                <option value="intermediate">Intermediate</option>
-                                <option value="advanced">Advanced</option>
+                            <select class="form-control" id="goals" name="goals" required>
+                                <option value="" disabled selected>Select your fitness goal</option>
+                                <option value="Weight Loss">Weight Loss</option>
+                                <option value="Muscle Gain">Muscle Gain</option>
+                                <option value="Athletic Performance">Athletic Performance</option>
+                                <option value="Overall Health">Overall Health</option>
                             </select>
-                            <label for="experience">Fitness Experience</label>
                         </div>
                         <div class="form-group">
-                            <select id="service" name="service" required aria-required="true">
-                                <option value="" selected disabled>Please select a service</option>
-                                <option value="online">Online Coaching</option>
-                                <option value="nutrition">Nutrition Planning</option>
-                                <option value="buy-program">Buy Program</option>
-                                <option value="package">Complete Package</option>
+                            <label for="experience">Experience Level</label>
+                            <select class="form-control" id="experience" name="experience" required>
+                                <option value="" disabled selected>Select your experience level</option>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
                             </select>
-                            <label for="service">Interested In</label>
                         </div>
                         <div class="form-group">
-                            <textarea id="message" name="message" rows="4" placeholder="Tell me more about your fitness journey and goals"></textarea>
+                            <label for="service">Service Interested In</label>
+                            <select class="form-control" id="service" name="service" required>
+                                <option value="" disabled selected>Select a service</option>
+                                <option value="1:1 Training">1:1 Training</option>
+                                <option value="Group Classes">Group Classes</option>
+                                <option value="Online Coaching">Online Coaching</option>
+                                <option value="Nutritional Guidance">Nutritional Guidance</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="message">Additional Information</label>
+                            <textarea class="form-control" id="message" name="message" rows="4" placeholder="Any additional details or questions"></textarea>
                         </div>
                         <div class="button-container">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Start Your Fitness Journey</button>
                         </div>
                     </form>
                     <div id="form-success" class="form-success" style="display: none;">
@@ -350,15 +680,11 @@
                     <p>Have questions before you sign up? Feel free to reach out directly.</p>
                     <div class="info-item">
                         <i class="fas fa-envelope"></i>
-                        <span>info@proteinprincess.com</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-phone"></i>
-                        <span>(123) 456-7890</span>
+                        <span>karinalifts@gmail.com</span>
                     </div>
                     <div class="info-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>Downtown Fitness Studio, City</span>
+                        <span>Oslo, Norway</span>
                     </div>
                     <div class="social-links">
                         <a href="#" class="social-icon" data-tooltip="Instagram"><i class="fab fa-instagram"></i></a>
@@ -376,41 +702,177 @@
                 <h2>Transformation Results</h2>
                 <p>Real results from dedicated clients</p>
             </div>
+            
+            <style>
+                /* Complete transformation section overhaul */
+                .transformations-grid {
+                    max-width: 900px;
+                    margin: 40px auto;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 60px;
+                }
+                
+                .transformation-card {
+                    background-color: #fff;
+                    border-radius: 20px;
+                    overflow: hidden;
+                    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+                }
+                
+                /* Force table layout for perfect side-by-side */
+                .transformation-images {
+                    display: table !important;
+                    table-layout: fixed !important;
+                    width: 100% !important;
+                    position: relative !important;
+                    border-collapse: collapse !important;
+                }
+                
+                .before-image, .after-image {
+                    display: table-cell !important;
+                    width: 50% !important;
+                    position: relative !important;
+                    vertical-align: top !important;
+                    overflow: hidden !important;
+                }
+                
+                .before-image {
+                    border-right: 2px solid #8a2be2 !important;
+                }
+                
+                .before-image img, .after-image img {
+                    width: 100% !important;
+                    height: 450px !important;
+                    object-fit: cover !important;
+                    display: block !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                
+                .transformation-images .label {
+                    position: absolute !important;
+                    top: 20px !important;
+                    background: linear-gradient(90deg, #8a2be2, #9370db) !important;
+                    color: white !important;
+                    padding: 8px 16px !important;
+                    font-size: 14px !important;
+                    font-weight: bold !important;
+                    z-index: 2 !important;
+                }
+                
+                .before-image .label {
+                    left: 20px !important;
+                    border-radius: 4px !important;
+                }
+                
+                .after-image .label {
+                    right: 20px !important;
+                    border-radius: 4px !important;
+                }
+                
+                .progress-indicator {
+                    position: absolute !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    background-color: white !important;
+                    width: 50px !important;
+                    height: 50px !important;
+                    border-radius: 50% !important;
+                    z-index: 3 !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+                    border: 2px solid #8a2be2 !important;
+                    margin: 0 !important;
+                }
+                
+                .progress-indicator i {
+                    color: #8a2be2 !important;
+                    font-size: 20px !important;
+                }
+                
+                .transformation-info {
+                    padding: 25px !important;
+                    text-align: center !important;
+                    background-color: #fff !important;
+                    border-top: 1px solid rgba(0,0,0,0.05) !important;
+                }
+                
+                .transformation-stats {
+                    display: flex !important;
+                    justify-content: center !important;
+                    gap: 20px !important;
+                    margin-top: 15px !important;
+                    flex-wrap: wrap !important;
+                }
+                
+                /* Mobile styles */
+                @media (max-width: 768px) {
+                    .transformation-images {
+                        display: block !important;
+                    }
+                    
+                    .before-image, .after-image {
+                        display: block !important;
+                        width: 100% !important;
+                    }
+                    
+                    .before-image {
+                        border-right: none !important;
+                        border-bottom: 2px solid #8a2be2 !important;
+                    }
+                }
+            </style>
+            
             <div class="transformations-grid">
                 <div class="transformation-card">
                     <div class="transformation-images">
                         <div class="before-image">
-                            <!-- Add lazy loading -->
-                            <img src="images/IMG_4189.jpeg" alt="Before Transformation" loading="lazy">
+                            <img src="images/IMG_3734.PNG" alt="Before Transformation" loading="lazy">
                             <span class="label">BEFORE</span>
                         </div>
                         <div class="after-image">
-                            <!-- Add lazy loading -->
-                            <img src="images/IMG_6042.jpeg" alt="After Transformation" loading="lazy">
+                            <img src="images/IMG_3600.PNG" alt="After Transformation" loading="lazy">
                             <span class="label">AFTER</span>
+                        </div>
+                        <div class="progress-indicator">
+                            <i class="fas fa-arrow-right"></i>
                         </div>
                     </div>
                     <div class="transformation-info">
                         <h3>12 Week Transformation</h3>
                         <p>Custom nutrition plan + 4x weekly training sessions</p>
+                        <div class="transformation-stats">
+                            <span class="stat-badge"><i class="fas fa-weight"></i> 15kg Lost</span>
+                            <span class="stat-badge"><i class="fas fa-percentage"></i> 12% Body Fat Reduced</span>
+                        </div>
                     </div>
                 </div>
+                
                 <div class="transformation-card">
                     <div class="transformation-images">
                         <div class="before-image">
-                            <!-- Add lazy loading -->
                             <img src="images/IMG_2024_08_21-16_43_53_2390_67168800.jpeg" alt="Before Transformation" loading="lazy">
                             <span class="label">BEFORE</span>
                         </div>
                         <div class="after-image">
-                            <!-- Add lazy loading -->
                             <img src="images/IMG_2024_08_21-17_02_01_4530_E5DD4131.jpeg" alt="After Transformation" loading="lazy">
                             <span class="label">AFTER</span>
+                        </div>
+                        <div class="progress-indicator">
+                            <i class="fas fa-arrow-right"></i>
                         </div>
                     </div>
                     <div class="transformation-info">
                         <h3>8 Week Shred</h3>
                         <p>Specialized cutting program + HIIT training</p>
+                        <div class="transformation-stats">
+                            <span class="stat-badge"><i class="fas fa-bolt"></i> Increased Energy</span>
+                            <span class="stat-badge"><i class="fas fa-heart"></i> Improved Fitness</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -423,24 +885,11 @@
                 <div class="footer-logo">
                     <img src="images/IMG_3674.png" alt="Karina Fitness" class="footer-logo-img">
                 </div>
-                <div class="footer-nav">
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#transformations">Transformations</a></li>
-                        <li><a href="#testimonials">Testimonials</a></li>
-                        <li><a href="#faq">FAQ</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
+                <!-- No navigation links in the footer -->
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2023 All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="#" id="privacyPolicy">Privacy Policy</a>
-                    <a href="#" id="termsConditions">Terms & Conditions</a>
-                </div>
+                <!-- No footer links that duplicate the header navigation -->
             </div>
         </div>
     </footer>
@@ -448,6 +897,1733 @@
     <!-- Back to top button -->
     <a href="#" class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-chevron-up"></i></a>
 
+    <script>
+    function openFitnessQuiz() {
+        console.log("openFitnessQuiz called directly from HTML");
+        
+        // Create a quiz modal with multi-step process
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        overlay.style.zIndex = '99999';
+        overlay.style.display = 'flex';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
+        overlay.style.backdropFilter = 'blur(5px)';
+        overlay.style.transition = 'opacity 0.4s ease';
+        
+        // CRITICAL FIX - Add ID to overlay for easier targeting
+        overlay.id = 'quiz-overlay';
+        
+        // Add click event listener to close when clicking outside the modal
+        overlay.addEventListener('click', function(event) {
+            // Only close if clicking directly on the overlay, not on the modal or its children
+            if (event.target === overlay) {
+                console.log("Background clicked, closing quiz");
+                overlay.style.opacity = '0';
+                modal.style.transform = 'translateY(40px)';
+                modal.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(overlay);
+                }, 400);
+            }
+        });
+        
+        const modal = document.createElement('div');
+        modal.style.backgroundColor = 'white';
+        modal.style.padding = '40px';
+        modal.style.borderRadius = '16px';
+        modal.style.maxWidth = '800px';
+        modal.style.width = '90%';
+        modal.style.maxHeight = '80vh';
+        modal.style.overflowY = 'auto';
+        modal.style.position = 'relative';
+        modal.style.boxShadow = '0 15px 50px rgba(0, 0, 0, 0.3)';
+        modal.style.transition = 'all 0.4s ease';
+        modal.style.fontFamily = 'sequel-sans, sans-serif';
+        modal.style.transform = 'translateY(20px)';
+        modal.style.opacity = '0';
+        
+        // CRITICAL FIX - Add ID to modal for easier targeting
+        modal.id = 'quiz-modal';
+        
+        // Add close button
+        const closeButton = document.createElement('button');
+        closeButton.innerHTML = '&times;';
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '15px';
+        closeButton.style.right = '15px';
+        closeButton.style.border = 'none';
+        closeButton.style.background = 'rgba(240, 240, 240, 0.6)';
+        closeButton.style.fontSize = '28px';
+        closeButton.style.cursor = 'pointer';
+        closeButton.style.color = '#333';
+        closeButton.style.zIndex = '100';
+        closeButton.style.transition = 'all 0.2s ease';
+        closeButton.style.width = '40px';
+        closeButton.style.height = '40px';
+        closeButton.style.display = 'flex';
+        closeButton.style.justifyContent = 'center';
+        closeButton.style.alignItems = 'center';
+        closeButton.style.borderRadius = '50%';
+        closeButton.style.lineHeight = '1';
+        closeButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+        closeButton.setAttribute('aria-label', 'Close quiz');
+        closeButton.setAttribute('title', 'Exit quiz');
+        
+        closeButton.onmouseover = function() {
+            this.style.transform = 'rotate(90deg)';
+            this.style.backgroundColor = '#f0f0f0';
+            this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+        };
+        
+        closeButton.onmouseout = function() {
+            this.style.transform = 'rotate(0)';
+            this.style.backgroundColor = 'rgba(240, 240, 240, 0.6)';
+            this.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+        };
+        
+        closeButton.onclick = function() {
+            overlay.style.opacity = '0';
+            modal.style.transform = 'translateY(40px)';
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                document.body.removeChild(overlay);
+            }, 400);
+        };
+        
+        // Quiz state
+        const quizState = {
+            currentStep: 1,
+            totalSteps: 3,
+            answers: {
+                goal: '',
+                level: '',
+                time: ''
+            }
+        };
+
+        // Create quiz content
+        updateQuizContent();
+        
+        // Add modal to the overlay
+        modal.appendChild(closeButton);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        
+        // CRITICAL FIX - Set up MutationObserver to watch for changes to the modal content
+        setupQuizResultsObserver();
+        
+        // Animate in
+        setTimeout(() => {
+            overlay.style.opacity = '1';
+            modal.style.transform = 'translateY(0)';
+            modal.style.opacity = '1';
+        }, 10);
+        
+        // CRITICAL FIX - New function to set up a MutationObserver that watches for the results page
+        function setupQuizResultsObserver() {
+            console.log("Setting up quiz results observer");
+            
+            // Create a MutationObserver instance to watch for DOM changes
+            const observer = new MutationObserver(function(mutations) {
+                // Check if we're on the results page by looking for the "Your Perfect Match" title
+                if (document.querySelector('#quiz-modal h2') && 
+                    document.querySelector('#quiz-modal h2').textContent.includes('Your Perfect Match')) {
+                    
+                    console.log("RESULTS PAGE DETECTED by observer");
+                    
+                    // Check if buttons already exist
+                    if (!document.getElementById('restartQuiz') && !document.getElementById('contactButton')) {
+                        console.log("Buttons not found - injecting new buttons");
+                        forceCreateResultButtons();
+                    }
+                }
+            });
+            
+            // Configure and start the observer
+            observer.observe(modal, {
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+            
+            console.log("Quiz results observer started");
+        }
+        
+        // CRITICAL FIX - New function to force create the result buttons
+        function forceCreateResultButtons() {
+            console.log("Force creating result buttons");
+            
+            try {
+                // Create container for buttons
+                const buttonContainer = document.createElement('div');
+                buttonContainer.id = 'quiz-result-buttons';
+                buttonContainer.style.display = 'flex';
+                buttonContainer.style.justifyContent = 'center';
+                buttonContainer.style.gap = '20px';
+                buttonContainer.style.flexWrap = 'wrap';
+                buttonContainer.style.marginTop = '30px';
+                buttonContainer.style.marginBottom = '10px';
+                
+                // Create restart button
+                const restartButton = document.createElement('button');
+                restartButton.id = 'restartQuiz';
+                restartButton.innerHTML = '<i class="fas fa-redo" style="margin-right: 8px;"></i>Start Over';
+                restartButton.style.padding = '16px 28px';
+                restartButton.style.background = 'transparent';
+                restartButton.style.color = '#333';
+                restartButton.style.border = '2px solid #ddd';
+                restartButton.style.borderRadius = '50px';
+                restartButton.style.cursor = 'pointer';
+                restartButton.style.fontWeight = '600';
+                restartButton.style.fontSize = '17px';
+                restartButton.style.transition = 'all 0.3s ease';
+                restartButton.style.display = 'flex';
+                restartButton.style.alignItems = 'center';
+                restartButton.style.minWidth = '160px';
+                restartButton.style.justifyContent = 'center';
+                
+                // Create contact button
+                const contactButton = document.createElement('button');
+                contactButton.id = 'contactButton';
+                contactButton.innerHTML = '<i class="fas fa-envelope" style="margin-right: 8px;"></i>Contact Karina';
+                contactButton.style.padding = '16px 28px';
+                contactButton.style.background = 'linear-gradient(90deg, #ff6b6b, #f86296)';
+                contactButton.style.color = 'white';
+                contactButton.style.border = 'none';
+                contactButton.style.borderRadius = '50px';
+                contactButton.style.cursor = 'pointer';
+                contactButton.style.fontWeight = '600';
+                contactButton.style.fontSize = '17px';
+                contactButton.style.transition = 'all 0.3s ease';
+                contactButton.style.boxShadow = '0 6px 15px rgba(248, 98, 150, 0.3)';
+                contactButton.style.display = 'flex';
+                contactButton.style.alignItems = 'center';
+                contactButton.style.minWidth = '180px';
+                contactButton.style.justifyContent = 'center';
+                
+                // Add buttons to container
+                buttonContainer.appendChild(restartButton);
+                buttonContainer.appendChild(contactButton);
+                
+                // Find appropriate place to add buttons - prefer adding after the recommendation box
+                const recommendationBox = modal.querySelector('div[style*="background-color: #f9f9f9"]');
+                if (recommendationBox) {
+                    console.log("Found recommendation box, appending buttons after it");
+                    recommendationBox.insertAdjacentElement('afterend', buttonContainer);
+                } else {
+                    // Fallback: append to the end of the modal content
+                    console.log("No recommendation box found, appending to modal");
+                    modal.appendChild(buttonContainer);
+                }
+                
+                // Add event listeners
+                restartButton.onclick = function() {
+                    console.log("Restart button clicked");
+                    quizState.currentStep = 1;
+                    quizState.answers = {
+                        goal: '',
+                        level: '',
+                        time: ''
+                    };
+                    updateQuizContent();
+                    return false;
+                };
+                
+                restartButton.onmouseover = function() {
+                    this.style.backgroundColor = '#f7f7f7';
+                    this.style.borderColor = '#ccc';
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 5px 12px rgba(0,0,0,0.1)';
+                };
+                
+                restartButton.onmouseout = function() {
+                    this.style.backgroundColor = 'transparent';
+                    this.style.borderColor = '#ddd';
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                };
+                
+                contactButton.onclick = function() {
+                    console.log("Contact button clicked");
+                    overlay.style.opacity = '0';
+                    modal.style.transform = 'translateY(40px)';
+                    modal.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(overlay);
+                        // Scroll to contact form
+                        const contactSection = document.getElementById('contact');
+                        if (contactSection) {
+                            contactSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 400);
+                    return false;
+                };
+                
+                contactButton.onmouseover = function() {
+                    this.style.transform = 'translateY(-3px)';
+                    this.style.boxShadow = '0 8px 20px rgba(248, 98, 150, 0.4)';
+                };
+                
+                contactButton.onmouseout = function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 6px 15px rgba(248, 98, 150, 0.3)';
+                };
+                
+                console.log("Result buttons created and event listeners attached successfully");
+            } catch (err) {
+                console.error("Error creating result buttons:", err);
+            }
+        }
+        
+        function updateQuizContent() {
+            let content = '';
+            
+            // Add progress bar - only for steps 1-3, not for results page
+            if (quizState.currentStep <= quizState.totalSteps) {
+                content += `
+                    <div style="margin-bottom: 35px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                            <span style="font-size: 15px; color: #666; font-weight: 500;">Step ${quizState.currentStep} of ${quizState.totalSteps}</span>
+                            <span style="font-size: 15px; color: #666; font-weight: 500;">${Math.round((quizState.currentStep/quizState.totalSteps)*100)}%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background-color: #f0f0f0; border-radius: 8px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
+                            <div style="width: ${(quizState.currentStep/quizState.totalSteps)*100}%; height: 100%; background: linear-gradient(90deg, #ff6b6b, #f86296); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            // NO PROGRESS METRICS are shown after this point for the results page
+            
+            // Step content
+            if (quizState.currentStep === 1) {
+                // Goal question
+                content += `
+                    <h2 style="margin-top: 0; margin-bottom: 25px; color: #333; font-size: 32px; font-weight: 600; line-height: 1.2;">What's your main fitness goal?</h2>
+                    <p style="margin-bottom: 35px; color: #666; font-size: 17px; line-height: 1.5;">Select the option that best describes what you want to achieve.</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px;">
+                        ${createOption('goal', 'weight-loss', 'Weight Loss', 'Burn fat and achieve a leaner physique', 'fas fa-fire-alt')}
+                        ${createOption('goal', 'muscle-gain', 'Build Muscle', 'Increase strength and muscle mass', 'fas fa-dumbbell')}
+                        ${createOption('goal', 'tone', 'Tone & Sculpt', 'Define muscles without bulking up', 'fas fa-feather-alt')}
+                        ${createOption('goal', 'endurance', 'Improve Endurance', 'Boost stamina and cardiovascular health', 'fas fa-heartbeat')}
+                    </div>
+                `;
+            } else if (quizState.currentStep === 2) {
+                // Fitness level question
+                content += `
+                    <h2 style="margin-top: 0; margin-bottom: 25px; color: #333; font-size: 32px; font-weight: 600; line-height: 1.2;">What's your current fitness level?</h2>
+                    <p style="margin-bottom: 35px; color: #666; font-size: 17px; line-height: 1.5;">Be honest - this helps tailor your plan appropriately.</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px;">
+                        ${createOption('level', 'beginner', 'Beginner', 'New to fitness or returning after a long break', 'fas fa-seedling')}
+                        ${createOption('level', 'intermediate', 'Intermediate', 'Workout regularly with some experience', 'fas fa-running')}
+                        ${createOption('level', 'advanced', 'Advanced', 'Experienced and looking for a challenge', 'fas fa-bolt')}
+                    </div>
+                `;
+            } else if (quizState.currentStep === 3) {
+                // Time commitment question
+                content += `
+                    <h2 style="margin-top: 0; margin-bottom: 25px; color: #333; font-size: 32px; font-weight: 600; line-height: 1.2;">How much time can you commit weekly?</h2>
+                    <p style="margin-bottom: 35px; color: #666; font-size: 17px; line-height: 1.5;">Select the time commitment that fits your schedule.</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px;">
+                        ${createOption('time', 'minimal', '1-2 Hours', 'Quick, efficient workouts for busy schedules', 'fas fa-stopwatch')}
+                        ${createOption('time', 'moderate', '3-4 Hours', 'Balanced time commitment', 'fas fa-hourglass-half')}
+                        ${createOption('time', 'dedicated', '5+ Hours', 'Dedicated training for optimal results', 'fas fa-calendar-check')}
+                    </div>
+                `;
+            } else {
+                // Results page - with no progress metrics
+                console.log("Generating results page HTML");
+                const recommendation = getRecommendation();
+                content += `
+                    <div style="text-align: center; padding: 20px 0;">
+                        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #ff6b6b, #f86296); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; box-shadow: 0 10px 20px rgba(248, 98, 150, 0.3);">
+                            <i class="fas fa-check" style="color: white; font-size: 45px;"></i>
+                        </div>
+                        <h2 style="margin-top: 0; margin-bottom: 15px; color: #333; font-size: 36px; font-weight: 600;">Your Perfect Match</h2>
+                        <p style="margin-bottom: 40px; color: #666; font-size: 18px; max-width: 600px; margin-left: auto; margin-right: auto;">Based on your goals and preferences, we've found your ideal program.</p>
+                    </div>
+                    
+                    <div style="background-color: #f9f9f9; border-radius: 16px; padding: 35px; margin-bottom: 35px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="background: linear-gradient(135deg, #ff6b6b, #f86296); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; box-shadow: 0 5px 15px rgba(248, 98, 150, 0.2);">
+                                <i class="fas ${getIconForGoal(quizState.answers.goal)}" style="color: white; font-size: 22px;"></i>
+                            </div>
+                            <h3 style="margin: 0; color: #333; font-size: 26px; font-weight: 600;">${recommendation.title}</h3>
+                        </div>
+                        <p style="margin-bottom: 25px; font-size: 17px; line-height: 1.6; color: #555;">${recommendation.description}</p>
+                        
+                        <div style="margin-top: 25px; background-color: white; padding: 25px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.03);">
+                            <h4 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; color: #333; display: flex; align-items: center;">
+                                <i class="fas fa-list" style="color: #ff6b6b; margin-right: 10px;"></i>
+                                Your Plan Includes:
+                            </h4>
+                            <ul style="padding-left: 15px; margin-bottom: 20px; list-style-type: none;">
+                                ${recommendation.features.map(feature => 
+                                    `<li style="margin-bottom: 12px; padding-left: 30px; position: relative;">
+                                        <i class="fas fa-check" style="color: #ff6b6b; position: absolute; left: 0; top: 4px;"></i>
+                                        <span style="color: #555; font-size: 16px;">${feature}</span>
+                                    </li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                
+                // CRITICAL FIX: Add direct button HTML without relying on complex containers
+                content += `
+                    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 40px; margin-bottom: 20px;">
+                        <button onclick="document.getElementById('quiz-restart-btn').click();" style="padding: 16px 28px; background: transparent; color: #333; border: 2px solid #ddd; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 17px; transition: all 0.3s ease; display: flex; align-items: center; min-width: 160px; justify-content: center;">
+                            <i class="fas fa-redo" style="margin-right: 8px;"></i>
+                            Start Over
+                        </button>
+                        <button onclick="document.getElementById('quiz-contact-btn').click();" style="padding: 16px 28px; background: linear-gradient(90deg, #ff6b6b, #f86296); color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 17px; transition: all 0.3s ease; box-shadow: 0 6px 15px rgba(248, 98, 150, 0.3); display: flex; align-items: center; min-width: 180px; justify-content: center;">
+                            <i class="fas fa-envelope" style="margin-right: 8px;"></i>
+                            Contact Karina
+                        </button>
+                    </div>
+                    
+                    <!-- Hidden buttons that will be clicked programmatically -->
+                    <button id="quiz-restart-btn" style="display: none;" onclick="window.quizState.currentStep = 1; window.quizState.answers = {goal: '', level: '', time: ''}; updateQuizContent();"></button>
+                    <button id="quiz-contact-btn" style="display: none;" onclick="closeAndScrollToContact();"></button>
+                `;
+                
+                console.log("Results page HTML generated with direct buttons");
+            }
+            
+            // Navigation buttons (except on results page)
+            if (quizState.currentStep <= quizState.totalSteps) {
+                content += `
+                    <div style="display: flex; justify-content: space-between; margin-top: 40px;">
+                        ${quizState.currentStep > 1 ? 
+                            `<button id="prevButton" style="padding: 14px 22px; background: transparent; color: #333; border: 2px solid #ddd; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.2s ease; display: flex; align-items: center;">
+                                <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
+                                Previous
+                            </button>` : 
+                            `<div></div>`}
+                        <button id="nextButton" style="padding: 14px 28px; background: linear-gradient(90deg, #ff6b6b, #f86296); color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.2s ease; opacity: ${quizState.answers[getQuestionKey()] ? '1' : '0.5'}; ${!quizState.answers[getQuestionKey()] ? 'cursor: not-allowed;' : 'box-shadow: 0 5px 15px rgba(248, 98, 150, 0.3)'}" ${!quizState.answers[getQuestionKey()] ? 'disabled' : ''}>
+                            ${quizState.currentStep === quizState.totalSteps ? 'See Results' : 'Continue'}
+                            <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+                        </button>
+                    </div>
+                `;
+            }
+            
+            // Set content
+            modal.innerHTML = '';
+            modal.appendChild(closeButton);
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.id = 'quiz-content-container';
+            contentDiv.innerHTML = content;
+            modal.appendChild(contentDiv);
+            
+            // CRITICAL FIX: For results page, directly create and append buttons after DOM is ready
+            if (quizState.currentStep > quizState.totalSteps) {
+                console.log("Creating results page buttons via direct DOM manipulation");
+                
+                // Create the buttons container - Look for the placeholder first
+                const buttonPlaceholder = contentDiv.querySelector('#results-button-placeholder');
+                if (!buttonPlaceholder) {
+                    console.error("Button placeholder not found!");
+                    return;
+                }
+                
+                // Create restart button
+                const restartButton = document.createElement('button');
+                restartButton.id = 'restartQuiz';
+                restartButton.innerHTML = '<i class="fas fa-redo" style="margin-right: 8px;"></i>Start Over';
+                restartButton.style.padding = '16px 28px';
+                restartButton.style.background = 'transparent';
+                restartButton.style.color = '#333';
+                restartButton.style.border = '2px solid #ddd';
+                restartButton.style.borderRadius = '50px';
+                restartButton.style.cursor = 'pointer';
+                restartButton.style.fontWeight = '600';
+                restartButton.style.fontSize = '17px';
+                restartButton.style.transition = 'all 0.3s ease';
+                restartButton.style.display = 'flex';
+                restartButton.style.alignItems = 'center';
+                restartButton.style.minWidth = '160px';
+                restartButton.style.justifyContent = 'center';
+                
+                // Create contact button
+                const contactButton = document.createElement('button');
+                contactButton.id = 'contactButton';
+                contactButton.innerHTML = '<i class="fas fa-envelope" style="margin-right: 8px;"></i>Contact Karina';
+                contactButton.style.padding = '16px 28px';
+                contactButton.style.background = 'linear-gradient(90deg, #ff6b6b, #f86296)';
+                contactButton.style.color = 'white';
+                contactButton.style.border = 'none';
+                contactButton.style.borderRadius = '50px';
+                contactButton.style.cursor = 'pointer';
+                contactButton.style.fontWeight = '600';
+                contactButton.style.fontSize = '17px';
+                contactButton.style.transition = 'all 0.3s ease';
+                contactButton.style.boxShadow = '0 6px 15px rgba(248, 98, 150, 0.3)';
+                contactButton.style.display = 'flex';
+                contactButton.style.alignItems = 'center';
+                contactButton.style.minWidth = '180px';
+                contactButton.style.justifyContent = 'center';
+                
+                // Add event listeners directly when creating buttons
+                restartButton.onclick = function() {
+                    console.log("Restart button clicked");
+                    quizState.currentStep = 1;
+                    quizState.answers = {
+                        goal: '',
+                        level: '',
+                        time: ''
+                    };
+                    updateQuizContent();
+                    return false;
+                };
+                
+                restartButton.onmouseover = function() {
+                    this.style.backgroundColor = '#f7f7f7';
+                    this.style.borderColor = '#ccc';
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 5px 12px rgba(0,0,0,0.1)';
+                };
+                
+                restartButton.onmouseout = function() {
+                    this.style.backgroundColor = 'transparent';
+                    this.style.borderColor = '#ddd';
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                };
+                
+                contactButton.onclick = function() {
+                    console.log("Contact button clicked");
+                    overlay.style.opacity = '0';
+                    modal.style.transform = 'translateY(40px)';
+                    modal.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(overlay);
+                        // Scroll to contact form
+                        const contactSection = document.getElementById('contact');
+                        if (contactSection) {
+                            contactSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 400);
+                    return false;
+                };
+                
+                contactButton.onmouseover = function() {
+                    this.style.transform = 'translateY(-3px)';
+                    this.style.boxShadow = '0 8px 20px rgba(248, 98, 150, 0.4)';
+                };
+                
+                contactButton.onmouseout = function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 6px 15px rgba(248, 98, 150, 0.3)';
+                };
+                
+                // Append buttons to the placeholder
+                buttonPlaceholder.appendChild(restartButton);
+                buttonPlaceholder.appendChild(contactButton);
+                
+                console.log("Results page buttons created and event listeners attached");
+            }
+            
+            // Debug check for modal content
+            console.log("Modal HTML set, buttons should be:", 
+                quizState.currentStep > quizState.totalSteps ? "visible (results page)" : "navigation only");
+            
+            // Add event listeners for quiz steps
+            if (quizState.currentStep <= quizState.totalSteps) {
+                // ... existing code ...
+                // Add a slight delay to ensure DOM is fully updated
+                setTimeout(() => {
+                    try {
+                        console.log("Setting up event listeners for step", quizState.currentStep);
+                        
+                        // Option selection
+                        const options = modal.querySelectorAll('.quiz-option');
+                        console.log("Found", options.length, "options");
+                        
+                        options.forEach(option => {
+                            option.addEventListener('click', () => {
+                                try {
+                                    console.log("Option clicked:", option.querySelector('h3').textContent);
+                                    const type = option.getAttribute('data-type');
+                                    const value = option.getAttribute('data-value');
+                                    
+                                    // Update selected option
+                                    quizState.answers[type] = value;
+                                    console.log("Updated answer:", type, "=", value);
+                                    
+                                    options.forEach(opt => {
+                                        if (opt.getAttribute('data-type') === type) {
+                                            opt.style.borderColor = '#ddd';
+                                            opt.style.backgroundColor = '#fff';
+                                            opt.style.boxShadow = 'none';
+                                            
+                                            // Reset icon background
+                                            const iconCircle = opt.querySelector('.option-icon');
+                                            if (iconCircle) {
+                                                iconCircle.style.background = '#f0f0f0';
+                                                const icon = iconCircle.querySelector('i');
+                                                if (icon) icon.style.color = '#666';
+                                            }
+                                        }
+                                    });
+                                    option.style.borderColor = '#ff6b6b';
+                                    option.style.backgroundColor = '#fff0f0';
+                                    option.style.boxShadow = '0 5px 15px rgba(255, 107, 107, 0.15)';
+                                    
+                                    // Highlight icon
+                                    const iconCircle = option.querySelector('.option-icon');
+                                    if (iconCircle) {
+                                        iconCircle.style.background = 'linear-gradient(135deg, #ff6b6b, #f86296)';
+                                        const icon = iconCircle.querySelector('i');
+                                        if (icon) icon.style.color = 'white';
+                                    }
+                                    
+                                    // Enable next button
+                                    const nextButton = document.getElementById('nextButton');
+                                    if (nextButton) {
+                                        nextButton.style.opacity = '1';
+                                        nextButton.style.cursor = 'pointer';
+                                        nextButton.style.boxShadow = '0 5px 15px rgba(248, 98, 150, 0.3)';
+                                        nextButton.disabled = false;
+                                    }
+                                    
+                                    // Automatically proceed to next step after a short delay (for visual feedback)
+                                    if (quizState.currentStep <= quizState.totalSteps) {
+                                        setTimeout(() => {
+                                            quizState.currentStep++;
+                                            updateQuizContent();
+                                            
+                                            // Log for debugging
+                                            console.log("Auto-advanced to step:", quizState.currentStep);
+                                            
+                                            // Special handling for results page
+                                            if (quizState.currentStep > quizState.totalSteps) {
+                                                console.log("Should be showing results now");
+                                                // Force getting the recommendation
+                                                getRecommendation();
+                                                
+                                                // Extra check to verify results page buttons
+                                                setTimeout(() => {
+                                                    console.log("Running delayed check for results page buttons");
+                                                    // Check if buttons exist after a delay
+                                                    const restartBtn = document.getElementById('restartQuiz');
+                                                    const contactBtn = document.getElementById('contactButton');
+                                                    
+                                                    if (!restartBtn || !contactBtn) {
+                                                        console.error("Buttons missing after delay, forcing recreation");
+                                                        
+                                                        // Force buttons creation if missing
+                                                        const buttonContainer = document.createElement('div');
+                                                        buttonContainer.id = 'quiz-result-buttons';
+                                                        buttonContainer.style.display = 'flex';
+                                                        buttonContainer.style.justifyContent = 'center';
+                                                        buttonContainer.style.gap = '20px';
+                                                        buttonContainer.style.flexWrap = 'wrap';
+                                                        buttonContainer.style.marginTop = '10px';
+                                                        buttonContainer.style.zIndex = '9999';
+                                                        buttonContainer.style.position = 'relative';
+                                                        
+                                                        // Create restart button
+                                                        const restartButton = document.createElement('button');
+                                                        restartButton.id = 'restartQuiz';
+                                                        restartButton.innerHTML = '<i class="fas fa-redo" style="margin-right: 8px;"></i>Start Over';
+                                                        restartButton.style.padding = '16px 28px';
+                                                        restartButton.style.background = 'transparent';
+                                                        restartButton.style.color = '#333';
+                                                        restartButton.style.border = '2px solid #ddd';
+                                                        restartButton.style.borderRadius = '50px';
+                                                        restartButton.style.cursor = 'pointer';
+                                                        restartButton.style.fontWeight = '600';
+                                                        restartButton.style.fontSize = '17px';
+                                                        restartButton.style.transition = 'all 0.3s ease';
+                                                        restartButton.style.display = 'flex';
+                                                        restartButton.style.alignItems = 'center';
+                                                        restartButton.style.minWidth = '160px';
+                                                        restartButton.style.justifyContent = 'center';
+                                                        
+                                                        // Create contact button
+                                                        const contactButton = document.createElement('button');
+                                                        contactButton.id = 'contactButton';
+                                                        contactButton.innerHTML = '<i class="fas fa-envelope" style="margin-right: 8px;"></i>Contact Karina';
+                                                        contactButton.style.padding = '16px 28px';
+                                                        contactButton.style.background = 'linear-gradient(90deg, #ff6b6b, #f86296)';
+                                                        contactButton.style.color = 'white';
+                                                        contactButton.style.border = 'none';
+                                                        contactButton.style.borderRadius = '50px';
+                                                        contactButton.style.cursor = 'pointer';
+                                                        contactButton.style.fontWeight = '600';
+                                                        contactButton.style.fontSize = '17px';
+                                                        contactButton.style.transition = 'all 0.3s ease';
+                                                        contactButton.style.boxShadow = '0 6px 15px rgba(248, 98, 150, 0.3)';
+                                                        contactButton.style.display = 'flex';
+                                                        contactButton.style.alignItems = 'center';
+                                                        contactButton.style.minWidth = '180px';
+                                                        contactButton.style.justifyContent = 'center';
+                                                        
+                                                        // Add buttons to container
+                                                        buttonContainer.appendChild(restartButton);
+                                                        buttonContainer.appendChild(contactButton);
+                                                        
+                                                        // Find where to append the buttons
+                                                        const contentContainer = document.getElementById('quiz-content-container');
+                                                        if (contentContainer) {
+                                                            contentContainer.appendChild(buttonContainer);
+                                                            console.log("Manually added buttons to container");
+                                                            
+                                                            // Add event listeners for the newly created buttons
+                                                            restartButton.onclick = function() {
+                                                                console.log("Restart button clicked");
+                                                                quizState.currentStep = 1;
+                                                                quizState.answers = {
+                                                                    goal: '',
+                                                                    level: '',
+                                                                    time: ''
+                                                                };
+                                                                updateQuizContent();
+                                                                return false;
+                                                            };
+                                                            
+                                                            restartButton.onmouseover = function() {
+                                                                this.style.backgroundColor = '#f7f7f7';
+                                                                this.style.borderColor = '#ccc';
+                                                                this.style.transform = 'translateY(-2px)';
+                                                                this.style.boxShadow = '0 5px 12px rgba(0,0,0,0.1)';
+                                                            };
+                                                            
+                                                            restartButton.onmouseout = function() {
+                                                                this.style.backgroundColor = 'transparent';
+                                                                this.style.borderColor = '#ddd';
+                                                                this.style.transform = 'translateY(0)';
+                                                                this.style.boxShadow = 'none';
+                                                            };
+                                                            
+                                                            contactButton.onclick = function() {
+                                                                console.log("Contact button clicked");
+                                                                overlay.style.opacity = '0';
+                                                                modal.style.transform = 'translateY(40px)';
+                                                                modal.style.opacity = '0';
+                                                                setTimeout(() => {
+                                                                    document.body.removeChild(overlay);
+                                                                    // Scroll to contact form
+                                                                    const contactSection = document.getElementById('contact');
+                                                                    if (contactSection) {
+                                                                        contactSection.scrollIntoView({ behavior: 'smooth' });
+                                                                    }
+                                                                }, 400);
+                                                                return false;
+                                                            };
+                                                            
+                                                            contactButton.onmouseover = function() {
+                                                                this.style.transform = 'translateY(-3px)';
+                                                                this.style.boxShadow = '0 8px 20px rgba(248, 98, 150, 0.4)';
+                                                            };
+                                                            
+                                                            contactButton.onmouseout = function() {
+                                                                this.style.transform = 'translateY(0)';
+                                                                this.style.boxShadow = '0 6px 15px rgba(248, 98, 150, 0.3)';
+                                                            };
+                                                        }
+                                                    }
+                                                }, 100);
+                                            }
+                                        }, 400); // Delay for visual feedback that option was selected
+                                    }
+                                } catch (err) {
+                                    console.error("Error in option click handler:", err);
+                                }
+                            });
+                        });
+                        
+                        // Previous button
+                        const prevButton = document.getElementById('prevButton');
+                        if (prevButton) {
+                            console.log("Previous button found, adding click handler");
+                            prevButton.addEventListener('click', function prevButtonHandler() {
+                                console.log("Previous button clicked");
+                                quizState.currentStep--;
+                                updateQuizContent();
+                            });
+                            
+                            // Add hover effect
+                            prevButton.onmouseover = function() {
+                                this.style.backgroundColor = '#f0f0f0';
+                                this.style.borderColor = '#ccc';
+                            };
+                            prevButton.onmouseout = function() {
+                                this.style.backgroundColor = 'transparent';
+                                this.style.borderColor = '#ddd';
+                            };
+                        }
+                        
+                        // Next button - use a direct onclick handler for more reliability
+                        const nextButton = document.getElementById('nextButton');
+                        if (nextButton) {
+                            console.log("Next button found, adding click handler");
+                            // Remove any existing onclick to avoid duplicates
+                            nextButton.onclick = null;
+                            
+                            // Add new direct onclick handler
+                            nextButton.onclick = function() {
+                                if (this.disabled) return false;
+                                
+                                console.log("Next button clicked, moving to step", quizState.currentStep + 1);
+                                quizState.currentStep++;
+                                updateQuizContent();
+                                return false; // Prevent any default action
+                            };
+                            
+                            // Add hover effect if enabled
+                            if (!nextButton.disabled) {
+                                nextButton.onmouseover = function() {
+                                    this.style.transform = 'translateY(-2px)';
+                                };
+                                nextButton.onmouseout = function() {
+                                    this.style.transform = 'translateY(0)';
+                                };
+                            }
+                        }
+                    } catch (err) {
+                        console.error("Error setting up event listeners:", err);
+                    }
+                }, 50); // Small delay to ensure DOM is ready
+            } else {
+                // Results page buttons
+                setTimeout(() => {
+                    try {
+                        console.log("Setting up result page buttons");
+                        
+                        const restartButton = document.getElementById('restartQuiz');
+                        if (restartButton) {
+                            console.log("Restart button found");
+                            restartButton.onclick = function() {
+                                console.log("Restart button clicked");
+                                quizState.currentStep = 1;
+                                quizState.answers = {
+                                    goal: '',
+                                    level: '',
+                                    time: ''
+                                };
+                                updateQuizContent();
+                                return false;
+                            };
+                            
+                            // Add hover effect for restart button
+                            restartButton.onmouseover = function() {
+                                this.style.backgroundColor = '#f7f7f7';
+                                this.style.borderColor = '#ccc';
+                                this.style.transform = 'translateY(-2px)';
+                                this.style.boxShadow = '0 5px 12px rgba(0,0,0,0.1)';
+                            };
+                            restartButton.onmouseout = function() {
+                                this.style.backgroundColor = 'transparent';
+                                this.style.borderColor = '#ddd';
+                                this.style.transform = 'translateY(0)';
+                                this.style.boxShadow = 'none';
+                            };
+                        } else {
+                            console.error("Restart button NOT found in DOM");
+                        }
+                        
+                        const contactButton = document.getElementById('contactButton');
+                        if (contactButton) {
+                            console.log("Contact button found");
+                            contactButton.onclick = function() {
+                                console.log("Contact button clicked");
+                                overlay.style.opacity = '0';
+                                modal.style.transform = 'translateY(40px)';
+                                modal.style.opacity = '0';
+                                setTimeout(() => {
+                                    document.body.removeChild(overlay);
+                                    // Scroll to contact form
+                                    const contactSection = document.getElementById('contact');
+                                    if (contactSection) {
+                                        contactSection.scrollIntoView({ behavior: 'smooth' });
+                                    }
+                                }, 400);
+                                return false;
+                            };
+                            
+                            // Enhance hover effect for contact button
+                            contactButton.onmouseover = function() {
+                                this.style.transform = 'translateY(-3px)';
+                                this.style.boxShadow = '0 8px 20px rgba(248, 98, 150, 0.4)';
+                            };
+                            contactButton.onmouseout = function() {
+                                this.style.transform = 'translateY(0)';
+                                this.style.boxShadow = '0 6px 15px rgba(248, 98, 150, 0.3)';
+                            };
+                        } else {
+                            console.error("Contact button NOT found in DOM");
+                        }
+                        
+                        // Debug the button container
+                        const buttonContainer = document.getElementById('quiz-result-buttons');
+                        if (buttonContainer) {
+                            console.log("Button container found:", buttonContainer.children.length, "children");
+                        } else {
+                            console.error("Button container NOT found");
+                        }
+                        
+                    } catch (err) {
+                        console.error("Error setting up result buttons:", err);
+                    }
+                }, 50);
+            }
+        }
+        
+        function createOption(type, value, title, description, iconClass) {
+            const isSelected = quizState.answers[type] === value;
+            return `
+                <div class="quiz-option" data-type="${type}" data-value="${value}" style="border: 2px solid ${isSelected ? '#ff6b6b' : '#ddd'}; border-radius: 12px; padding: 25px; cursor: pointer; transition: all 0.3s ease; background-color: ${isSelected ? '#fff0f0' : '#fff'}; box-shadow: ${isSelected ? '0 5px 15px rgba(255, 107, 107, 0.15)' : '0 2px 8px rgba(0,0,0,0.03)'}; position: relative; overflow: hidden;">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <div class="option-icon" style="width: 42px; height: 42px; border-radius: 10px; background: ${isSelected ? 'linear-gradient(135deg, #ff6b6b, #f86296)' : '#f0f0f0'}; display: flex; align-items: center; justify-content: center; margin-right: 15px; transition: all 0.3s ease;">
+                            <i class="${iconClass}" style="color: ${isSelected ? 'white' : '#666'}; font-size: 18px; transition: all 0.3s ease;"></i>
+                        </div>
+                        <h3 style="margin: 0; font-size: 19px; color: #333; font-weight: 600; transition: all 0.3s ease;">${title}</h3>
+                    </div>
+                    <p style="margin: 0; font-size: 15px; color: #666; line-height: 1.5; padding-left: 57px;">${description}</p>
+                </div>
+            `;
+        }
+        
+        function getQuestionKey() {
+            if (quizState.currentStep === 1) return 'goal';
+            if (quizState.currentStep === 2) return 'level';
+            if (quizState.currentStep === 3) return 'time';
+            return '';
+        }
+        
+        function getIconForGoal(goal) {
+            switch(goal) {
+                case 'weight-loss': return 'fa-fire-alt';
+                case 'muscle-gain': return 'fa-dumbbell';
+                case 'tone': return 'fa-feather-alt';
+                case 'endurance': return 'fa-heartbeat';
+                default: return 'fa-check-circle';
+            }
+        }
+
+        function getRecommendation() {
+            console.log("Getting recommendation based on:", quizState.answers);
+            
+            // Determine the recommendation based on user answers
+            // No progress metrics will be shown in the recommendation
+            const goal = quizState.answers.goal;
+            const level = quizState.answers.level;
+            const time = quizState.answers.time;
+            
+            let recommendation = {
+                title: "Custom Fitness Program",
+                description: "A personalized program designed to help you reach your specific goals.",
+                features: [
+                    "Personalized workout routine",
+                    "Nutrition guidance",
+                    "Progress tracking",
+                    "Regular check-ins"
+                ]
+            };
+            
+            // Weight loss recommendations
+            if (goal === 'weight-loss') {
+                recommendation.title = "Fat Loss & Toning Program";
+                recommendation.description = "This comprehensive program focuses on sustainable fat loss while preserving muscle mass. It combines effective cardio strategies with strength training for optimal results.";
+                
+                if (level === 'beginner') {
+                    recommendation.features = [
+                        "Beginner-friendly workout progressions",
+                        "Fundamental nutrition principles",
+                        "Focus on form and technique",
+                        "Gradual intensity increases",
+                        "Basic HIIT introductions"
+                    ];
+                    if (time === 'minimal') {
+                        recommendation.title += " (Express)";
+                        recommendation.features.push("Time-efficient 20-30 minute workouts");
+                    } else if (time === 'dedicated') {
+                        recommendation.title += " (Complete)";
+                        recommendation.features.push("Full-length workout sessions for maximum results");
+                    }
+                } else if (level === 'advanced') {
+                    recommendation.features = [
+                        "Advanced fat-burning protocols",
+                        "Periodized training cycles",
+                        "Macronutrient manipulation strategies",
+                        "Metabolic conditioning",
+                        "Strategic refeed scheduling"
+                    ];
+                }
+            } 
+            // Muscle building recommendations
+            else if (goal === 'muscle-gain') {
+                recommendation.title = "Muscle Building Blueprint";
+                recommendation.description = "A science-based approach to building lean muscle mass through progressive overload, strategic nutrition, and optimal recovery protocols.";
+                
+                if (level === 'beginner') {
+                    recommendation.features = [
+                        "Full-body foundational workouts",
+                        "Progressive overload introduction",
+                        "Protein-focused nutrition plan",
+                        "Form-first approach to exercises",
+                        "Recovery optimization strategies"
+                    ];
+                } else if (level === 'intermediate') {
+                    recommendation.features = [
+                        "Upper/lower or push/pull/legs splits",
+                        "Periodized training cycles",
+                        "Targeted nutrition strategies",
+                        "Strategic deload weeks",
+                        "Supplement recommendations"
+                    ];
+                    if (time === 'dedicated') {
+                        recommendation.title += " (Intensive)";
+                        recommendation.features.push("Volume training techniques for maximum growth");
+                    }
+                }
+            }
+            // Toning recommendations
+            else if (goal === 'tone') {
+                recommendation.title = "Sculpt & Define Program";
+                recommendation.description = "Focus on creating lean, defined muscles with targeted resistance training and supportive nutrition to enhance muscle definition without bulk.";
+                
+                if (level === 'intermediate' && time === 'moderate') {
+                    recommendation.features = [
+                        "Targeted body-part sculpting sessions",
+                        "High-rep, moderate weight protocols",
+                        "Circuit training for fat loss and definition",
+                        "Anti-bloat nutrition strategies",
+                        "Core-focused finishers"
+                    ];
+                } else if (time === 'minimal') {
+                    recommendation.features = [
+                        "Time-efficient superset workouts",
+                        "Full-body sculpting sessions",
+                        "Quick HIIT cardio finishers",
+                        "Simple meal prep strategies",
+                        "Minimal equipment requirements"
+                    ];
+                }
+            }
+            // Endurance recommendations
+            else if (goal === 'endurance') {
+                recommendation.title = "Endurance Performance Plan";
+                recommendation.description = "Enhance your cardiovascular capacity, stamina, and overall endurance with progressive training that builds your aerobic and anaerobic systems.";
+                
+                if (level === 'advanced' && time === 'dedicated') {
+                    recommendation.title += " (Elite)";
+                    recommendation.features = [
+                        "Periodized endurance training cycles",
+                        "VO2 max improvement protocols",
+                        "Lactate threshold training",
+                        "Race-specific preparation",
+                        "Advanced recovery techniques",
+                        "Performance nutrition timing"
+                    ];
+                } else {
+                    recommendation.features = [
+                        "Progressive cardiovascular training",
+                        "Endurance-focused strength work",
+                        "Heart rate zone training",
+                        "Nutrition for sustained energy",
+                        "Breathing and efficiency techniques"
+                    ];
+                }
+            }
+            
+            console.log("Generated recommendation:", recommendation);
+            return recommendation;
+        }
+
+        return false; // Prevent default action
+    }
+
+    // CRITICAL FIX: Add this helper function at the end of the openFitnessQuiz function
+    function closeAndScrollToContact() {
+        console.log("Contact button clicked");
+        overlay.style.opacity = '0';
+        modal.style.transform = 'translateY(40px)';
+        modal.style.opacity = '0';
+        setTimeout(() => {
+            if (document.body.contains(overlay)) {
+                document.body.removeChild(overlay);
+            }
+            // Scroll to contact form
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                contactSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 400);
+    }
+
+    // Make quizState accessible globally for the hidden button handlers
+    window.quizState = quizState;
+    </script>
+
     <script src="script.js"></script>
+
+    <!-- Script to remove metric tabs -->
+    <script>
+        // Remove the metric tabs immediately when the DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // ONLY target elements within the metrics section
+            const tabsToRemove = Array.from(document.querySelectorAll('.metrics button, .metrics [role="tab"], .metrics nav, .metrics ul, .metrics-tabs, .metrics-filter'));
+            
+            tabsToRemove.forEach(element => {
+                if (element.textContent.includes('All Statistics') || 
+                    element.textContent.includes('Experience') || 
+                    element.textContent.includes('Clients') || 
+                    element.textContent.includes('Programs') || 
+                    element.textContent.includes('Success Rate')) {
+                    // Remove this element from the DOM
+                    if (element.parentNode) {
+                        element.parentNode.removeChild(element);
+                    }
+                }
+            });
+            
+            // Also try to remove any container elements that might hold tabs
+            const possibleContainers = [
+                '.metrics nav', 
+                '.metrics ul', 
+                '.metrics .tabs',
+                '.metrics .filter',
+                '.metrics .nav',
+                '.metrics-tabs',
+                '.metrics-filter',
+                '.metrics-nav'
+            ];
+            
+            possibleContainers.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    if (el.parentNode) {
+                        el.parentNode.removeChild(el);
+                    }
+                });
+            });
+            
+            // Create and add a style element to hide any remaining elements
+            const style = document.createElement('style');
+            style.textContent = `
+                button, [role="tab"], .metrics nav, .metrics ul, .metrics-tabs, .metrics-filter {
+                    display: none !important;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+
+    <!-- Create and add a style element to hide any remaining elements -->
+    <style>
+        .metrics button, 
+        .metrics [role="tab"], 
+        .metrics nav, 
+        .metrics ul, 
+        .metrics-tabs, 
+        .metrics-filter {
+            display: none !important;
+        }
+    </style>
+
+    <!-- Target ONLY metric section elements, not all buttons -->
+    <style>
+        .metrics [class*="statistic"],
+        .metrics [class*="metric"] + ul,
+        .metrics > .container > *:first-child:not(.metrics-grid) {
+            display: none !important;
+        }
+    </style>
+
+    <!-- Explicitly preserve the fitness quiz button -->
+    <style>
+        #fitnessQuizBtn {
+            display: inline-flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: static !important;
+            width: auto !important;
+            height: auto !important;
+            pointer-events: auto !important;
+            overflow: visible !important;
+            margin: 0 0 0 1rem !important;
+            padding: 0.75rem 1.5rem !important;
+        }
+    </style>
+
+    <!-- Add styling for the "+" indicator -->
+    <style>
+        .metric-item {
+            position: relative;
+            text-align: center;
+        }
+        
+        .metric-number {
+            display: inline-block;
+            position: relative;
+        }
+        
+        .metric-plus {
+            display: inline-block;
+            color: #8a2be2;
+            font-size: 24px;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            right: -15px;
+        }
+    </style>
+    
+    <!-- CRITICAL FIX: Add emergency script to force buttons on quiz results page -->
+    <script>
+    (function() {
+        // Global reference to store our interval
+        let checkInterval = null;
+        
+        // Flag to track if we're currently in a quiz session
+        let quizActive = false;
+        
+        // Keep track of buttons we've added
+        const addedButtonIds = [];
+        
+        // Function to check if we're on the quiz RESULTS page specifically
+        function checkForQuizResults() {
+            // Look for the modal first - if it's gone, we might need to reset
+            const modal = document.querySelector('div[style*="position: fixed"][style*="z-index: 99999"]');
+            if (!modal) {
+                quizActive = false;
+                removeAllButtons(); // Clean up any buttons if modal is closed
+                console.log("Quiz modal not found, removing any buttons");
+                return;
+            } else {
+                quizActive = true;
+            }
+            
+            // STRICT RESULTS PAGE DETECTION
+            // We need multiple criteria to be met to confirm this is the final results page
+            let confirmedResultsPage = false;
+            let resultPoints = 0;
+            
+            // #1 Find the modal and analyze its structure
+            const modalContent = modal.querySelector('div[style*="background-color: white"]');
+            if (!modalContent) return;
+            
+            // #2 Check for progress indicators - if these exist, we're NOT on results page
+            const progressIndicators = modalContent.querySelectorAll('div[style*="progress"]');
+            if (progressIndicators.length > 0) {
+                // Still in quiz steps, not results page
+                removeAllButtons();
+                console.log("Progress indicators found, not on results page");
+                return;
+            }
+            
+            // #3 Check for "Your Perfect Match" heading which only appears on results
+            const allH2 = modalContent.querySelectorAll('h2');
+            for (let h2 of allH2) {
+                if (h2.textContent.includes('Your Perfect Match')) {
+                    resultPoints += 3; // Strong indicator
+                    console.log("Found 'Your Perfect Match' heading");
+                }
+            }
+            
+            // #4 Check for "Based on your goals and preferences" text
+            const allParagraphs = modalContent.querySelectorAll('p');
+            for (let p of allParagraphs) {
+                if (p.textContent.includes('Based on your goals and preferences')) {
+                    resultPoints += 3; // Strong indicator
+                    console.log("Found 'Based on your goals' text");
+                }
+            }
+            
+            // #5 Check for program name (usually contains Blueprint, Program, etc.)
+            const allH3 = modalContent.querySelectorAll('h3');
+            for (let h3 of allH3) {
+                if (h3.textContent.includes('Blueprint') || 
+                    h3.textContent.includes('Program') || 
+                    h3.textContent.includes('Fitness')) {
+                    resultPoints += 2;
+                    console.log("Found program title");
+                }
+            }
+            
+            // #6 Check for "Your Plan Includes" heading
+            const allH4 = modalContent.querySelectorAll('h4');
+            for (let h4 of allH4) {
+                if (h4.textContent.includes('Your Plan Includes')) {
+                    resultPoints += 2;
+                    console.log("Found 'Your Plan Includes' heading");
+                }
+            }
+            
+            // #7 Check for feature bullets (at least 3) that wouldn't be in quiz steps
+            const lists = modalContent.querySelectorAll('ul');
+            for (let list of lists) {
+                const listItems = list.querySelectorAll('li');
+                if (listItems.length >= 3) {
+                    // Check for keywords in list items
+                    let fitnessTerms = 0;
+                    for (let item of listItems) {
+                        if (item.textContent.includes('workout') || 
+                            item.textContent.includes('nutrition') || 
+                            item.textContent.includes('tracking') || 
+                            item.textContent.includes('check-ins')) {
+                            fitnessTerms++;
+                        }
+                    }
+                    if (fitnessTerms >= 2) {
+                        resultPoints += 2;
+                        console.log("Found program features list");
+                    }
+                }
+            }
+            
+            // We need at least 6 points to confirm it's the results page
+            confirmedResultsPage = (resultPoints >= 6);
+            
+            // Check if our buttons exist already
+            let buttonsExist = false;
+            for (let id of addedButtonIds) {
+                if (document.getElementById(id)) {
+                    buttonsExist = true;
+                    break;
+                }
+            }
+            
+            // If we're on results page and buttons don't exist, add them
+            // Or if we're not on results page, remove any existing buttons
+            if (confirmedResultsPage && !buttonsExist) {
+                console.log("CONFIRMED RESULTS PAGE. Adding buttons...");
+                addDirectButtons(modalContent);
+            } else if (!confirmedResultsPage) {
+                removeAllButtons();
+            }
+        }
+        
+        // Function to remove all previously added buttons
+        function removeAllButtons() {
+            for (let id of addedButtonIds) {
+                const el = document.getElementById(id);
+                if (el && el.parentNode) {
+                    el.parentNode.removeChild(el);
+                }
+            }
+        }
+        
+        // Enhanced function to add buttons with unique IDs each time
+        function addDirectButtons(modalContent) {
+            console.log("Adding buttons to results page");
+            
+            try {
+                // Generate unique IDs for this instance to avoid conflicts
+                const timestamp = new Date().getTime();
+                const restartId = 'restart-btn-' + timestamp;
+                const contactId = 'contact-btn-' + timestamp;
+                const containerId = 'btn-container-' + timestamp;
+                
+                // Track these new IDs
+                addedButtonIds.push(restartId, contactId, containerId);
+                
+                // We'll place the buttons at the bottom of the content
+                let bestPlacementSpot = null;
+                let placementType = "default";
+                
+                // STRATEGY 1: Find the features list and place after it
+                const lists = modalContent.querySelectorAll('ul');
+                for (let list of lists) {
+                    if (list.querySelectorAll('li').length >= 3) {
+                        // This is likely the features list
+                        bestPlacementSpot = list;
+                        placementType = "after-list";
+                        console.log("Found features list for placement");
+                        break;
+                    }
+                }
+                
+                // STRATEGY 2: If no list, look for program description paragraph
+                if (!bestPlacementSpot) {
+                    const allParagraphs = modalContent.querySelectorAll('p:not([id])');
+                    for (let i = allParagraphs.length - 1; i >= 0; i--) {
+                        const p = allParagraphs[i];
+                        if (p.textContent.length > 30) { // Reasonable length paragraph
+                            bestPlacementSpot = p;
+                            placementType = "after-paragraph";
+                            console.log("Found description paragraph for placement");
+                            break;
+                        }
+                    }
+                }
+                
+                // STRATEGY 3: If still no spot, use the last element in the modal
+                if (!bestPlacementSpot) {
+                    const allElements = modalContent.querySelectorAll('*');
+                    if (allElements.length > 0) {
+                        bestPlacementSpot = allElements[allElements.length - 1];
+                        placementType = "last-element";
+                        console.log("Using last element for placement");
+                    }
+                }
+                
+                // Create the button container - positioned as a block at bottom of content
+                const buttonContainer = document.createElement('div');
+                buttonContainer.id = containerId;
+                buttonContainer.style.cssText = `
+                    display: flex !important;
+                    justify-content: center !important;
+                    gap: 20px !important;
+                    flex-wrap: wrap !important;
+                    margin: 35px auto 15px !important;
+                    width: 100% !important;
+                    max-width: 500px !important;
+                    z-index: 9999999 !important;
+                    background-color: transparent !important;
+                    padding: 0 20px !important;
+                `;
+                
+                // Create restart button
+                const restartButton = document.createElement('button');
+                restartButton.id = restartId;
+                restartButton.innerHTML = '<i class="fas fa-redo" style="margin-right: 8px;"></i>Start Over';
+                restartButton.style.cssText = `
+                    padding: 16px 28px !important;
+                    background: transparent !important;
+                    color: #333 !important;
+                    border: 2px solid #ddd !important;
+                    border-radius: 50px !important;
+                    cursor: pointer !important;
+                    font-weight: 600 !important;
+                    font-size: 17px !important;
+                    transition: all 0.3s ease !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    min-width: 160px !important;
+                    justify-content: center !important;
+                    font-family: 'sequel-sans', sans-serif !important;
+                `;
+                
+                // Create contact button
+                const contactButton = document.createElement('button');
+                contactButton.id = contactId;
+                contactButton.innerHTML = '<i class="fas fa-envelope" style="margin-right: 8px;"></i>Contact Karina';
+                contactButton.style.cssText = `
+                    padding: 16px 28px !important;
+                    background: linear-gradient(90deg, #ff6b6b, #f86296) !important;
+                    color: white !important;
+                    border: none !important;
+                    border-radius: 50px !important;
+                    cursor: pointer !important;
+                    font-weight: 600 !important;
+                    font-size: 17px !important;
+                    transition: all 0.3s ease !important;
+                    box-shadow: 0 6px 15px rgba(248, 98, 150, 0.3) !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    min-width: 180px !important;
+                    justify-content: center !important;
+                    font-family: 'sequel-sans', sans-serif !important;
+                `;
+                
+                // Add event listeners
+                restartButton.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log("Restart clicked");
+                    
+                    // Remove all buttons we've created
+                    removeAllButtons();
+                    addedButtonIds.length = 0; // Clear the array
+                    
+                    // Find and close the modal
+                    const modal = document.querySelector('div[style*="position: fixed"][style*="z-index: 99999"]');
+                    if (modal && modal.parentNode) {
+                        modal.parentNode.removeChild(modal);
+                    }
+                    
+                    // Reset quiz state
+                    quizActive = false;
+                    
+                    // Reopen quiz
+                    setTimeout(function() {
+                        if (typeof openFitnessQuiz === 'function') {
+                            openFitnessQuiz();
+                        } else {
+                            // Fallback - try to click the quiz button
+                            const quizButton = document.getElementById('fitnessQuizBtn');
+                            if (quizButton) {
+                                quizButton.click();
+                            }
+                        }
+                    }, 200);
+                    
+                    return false;
+                };
+                
+                contactButton.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log("Contact clicked");
+                    
+                    // Remove all buttons we've created
+                    removeAllButtons();
+                    addedButtonIds.length = 0; // Clear the array
+                    
+                    // Find and close the modal with animation
+                    const overlay = document.querySelector('div[style*="position: fixed"][style*="z-index: 99999"]');
+                    if (overlay) {
+                        overlay.style.opacity = '0';
+                        setTimeout(function() {
+                            if (overlay.parentNode) {
+                                overlay.parentNode.removeChild(overlay);
+                            }
+                            
+                            // Reset quiz state
+                            quizActive = false;
+                        }, 400);
+                    }
+                    
+                    // Scroll to contact section
+                    setTimeout(function() {
+                        const contactSection = document.getElementById('contact');
+                        if (contactSection) {
+                            contactSection.scrollIntoView({behavior: 'smooth'});
+                        }
+                    }, 100);
+                    
+                    return false;
+                };
+                
+                // Add hover effects
+                restartButton.onmouseover = function() {
+                    this.style.backgroundColor = '#f7f7f7';
+                    this.style.borderColor = '#ccc';
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 5px 12px rgba(0,0,0,0.1)';
+                };
+                
+                restartButton.onmouseout = function() {
+                    this.style.backgroundColor = 'transparent';
+                    this.style.borderColor = '#ddd';
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                };
+                
+                contactButton.onmouseover = function() {
+                    this.style.transform = 'translateY(-3px)';
+                    this.style.boxShadow = '0 8px 20px rgba(248, 98, 150, 0.4)';
+                };
+                
+                contactButton.onmouseout = function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 6px 15px rgba(248, 98, 150, 0.3)';
+                };
+                
+                // Add buttons to container
+                buttonContainer.appendChild(restartButton);
+                buttonContainer.appendChild(contactButton);
+                
+                // Position the container based on our best placement strategy
+                if (bestPlacementSpot) {
+                    if (placementType === "after-list" || placementType === "after-paragraph") {
+                        bestPlacementSpot.insertAdjacentElement('afterend', buttonContainer);
+                    } else {
+                        // Default - append to modal content
+                        modalContent.appendChild(buttonContainer);
+                    }
+                    console.log(`Buttons added after ${placementType}`);
+                } else {
+                    // Last resort - append to modal content
+                    modalContent.appendChild(buttonContainer);
+                    console.log("Buttons added to end of modal content");
+                }
+                
+                console.log(`Buttons added! Container ID: ${containerId}`);
+            } catch (err) {
+                console.error("Error creating buttons:", err);
+            }
+        }
+        
+        // When the page first loads or when the quiz button is clicked
+        function initializeDetection() {
+            console.log("Initializing quiz results detection");
+            
+            // Clear any existing interval
+            if (checkInterval) {
+                clearInterval(checkInterval);
+            }
+            
+            // Set up a new interval
+            checkInterval = setInterval(function() {
+                // Only run the check if the quiz seems to be active (modal present)
+                const modalExists = !!document.querySelector('div[style*="position: fixed"][style*="z-index: 99999"]');
+                if (modalExists) {
+                    quizActive = true;
+                    checkForQuizResults();
+                }
+            }, 500);
+            
+            // Set up a listener for the quiz button
+            const quizButton = document.getElementById('fitnessQuizBtn');
+            if (quizButton && !quizButton._hasResultsListener) {
+                quizButton.addEventListener('click', function() {
+                    console.log("Quiz button clicked, starting detection");
+                    quizActive = true;
+                    removeAllButtons(); // Clear any existing buttons
+                });
+                quizButton._hasResultsListener = true;
+            }
+        }
+        
+        // Set up observer to detect DOM changes
+        const observer = new MutationObserver(function(mutations) {
+            if (quizActive) {
+                // Only run checks if quiz is active
+                checkForQuizResults();
+            }
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['style', 'class'],
+            characterData: true
+        });
+        
+        // Initialize our detection
+        initializeDetection();
+        
+        // Also run when document is ready
+        if (document.readyState === 'complete') {
+            initializeDetection();
+        } else {
+            window.addEventListener('load', initializeDetection);
+        }
+        
+        console.log("Quiz results button script initialized");
+    })();
+    </script>
+
+    <script>
+        // Script to remove navigation buttons from the bottom of the page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Running script to remove bottom navigation");
+            
+            // 1. Remove any navigation lists from the footer
+            const footerNavs = document.querySelectorAll('footer nav, footer ul');
+            footerNavs.forEach(nav => {
+                console.log("Removing footer navigation:", nav);
+                if (nav.parentNode) {
+                    nav.parentNode.removeChild(nav);
+                }
+            });
+            
+            // 2. Remove any links in the footer that match header navigation
+            const headerLinks = Array.from(document.querySelectorAll('header nav a')).map(a => a.getAttribute('href'));
+            const footerLinks = document.querySelectorAll('footer a');
+            
+            footerLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                // If this link is also in the header navigation, remove it from the footer
+                if (headerLinks.includes(href) && href.startsWith('#')) {
+                    console.log("Removing duplicate link from footer:", href);
+                    if (link.parentNode) {
+                        link.parentNode.removeChild(link);
+                    }
+                }
+            });
+            
+            // 3. Find any other navigation at the bottom of the page
+            const bodyNavs = document.querySelectorAll('body > nav:not(.mobile-nav)');
+            bodyNavs.forEach(nav => {
+                if (nav.parentNode === document.body && !nav.closest('header')) {
+                    console.log("Removing body navigation:", nav);
+                    nav.parentNode.removeChild(nav);
+                }
+            });
+            
+            // NEW: 4. Find any ul element directly in the body that contains links like Home, About, Services
+            const navTerms = ['Home', 'About', 'Services', 'Transformations', 'Testimonials', 'FAQ', 'Contact'];
+            
+            // Function to check if a container has navigation links
+            function hasNavLinks(container) {
+                const links = container.querySelectorAll('a');
+                let navCount = 0;
+                
+                links.forEach(link => {
+                    const text = link.textContent.trim();
+                    if (navTerms.some(term => text.includes(term))) {
+                        navCount++;
+                    }
+                });
+                
+                // If more than 3 navigation links or more than 50% of links are navigation
+                return navCount > 3 || (links.length > 0 && navCount / links.length > 0.5);
+            }
+            
+            // Check all elements directly under body
+            Array.from(document.body.children).forEach(element => {
+                // Skip header, main content, and footer
+                if (element.tagName === 'HEADER' || element.id === 'content' || element.tagName === 'FOOTER' || 
+                    element.tagName === 'SCRIPT' || element.classList.contains('mobile-nav') || 
+                    element.classList.contains('back-to-top') || element.classList.contains('theme-toggle')) {
+                    return;
+                }
+                
+                // Check if this element contains navigation links
+                if (hasNavLinks(element)) {
+                    console.log("Found navigation-like element:", element);
+                    element.style.display = 'none';
+                    element.style.visibility = 'hidden';
+                    element.style.opacity = '0';
+                    element.style.pointerEvents = 'none';
+                    element.setAttribute('aria-hidden', 'true');
+                    
+                    // If possible, remove it
+                    try {
+                        if (element.parentNode) {
+                            element.parentNode.removeChild(element);
+                        }
+                    } catch (e) {
+                        console.error("Could not remove element:", e);
+                    }
+                }
+            });
+        });
+
+        // Run again after all content has loaded
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                // Find any UL with navigation-like links that's positioned near the bottom
+                document.querySelectorAll('ul, nav').forEach(element => {
+                    if (element.closest('header')) return; // Skip header navigation
+                    
+                    // Check if this is near the bottom of the page
+                    const rect = element.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight;
+                    
+                    // If element is in the bottom third of the viewport
+                    if (rect.top > (viewportHeight * 0.66)) {
+                        const links = element.querySelectorAll('a');
+                        if (links.length >= 3) {
+                            console.log("Found possible bottom navigation:", element);
+                            element.style.display = 'none !important';
+                            element.style.visibility = 'hidden !important';
+                            
+                            // Try to remove
+                            if (element.parentNode) {
+                                element.parentNode.removeChild(element);
+                            }
+                        }
+                    }
+                });
+            }, 500); // Delay to ensure everything is rendered
+        });
+    </script>
 </body>
 </html> 
